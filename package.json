@@ -5,5 +5,9 @@
   "repository": "https://github.com/codythomaszeitler/scepter-core.git",
   "author": "Cody T. Zeitler <codyzeitler12@gmail.com>",
   "license": "MIT",
-  "private": false
+  "private": false,
+  "dependencies": {
+    "tsc": "^2.0.3",
+    "typescript": "^4.4.3"
+  }
 }
