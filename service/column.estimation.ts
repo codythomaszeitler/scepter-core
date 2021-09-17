@@ -22,6 +22,7 @@ export class ColumnEstimation {
 
     let config: Object = {};
     for (let i = 0; i < headerSegments.length; i++) {
+      // @ts-ignore
       config[i] = {
         name: headerSegments[i],
         type: this.getTypeFromColumnName(headerSegments[i]),

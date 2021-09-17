@@ -8,6 +8,7 @@ export class MasterBankConfigParser {
   }
 
   getDefaultConfigName() {
+    // @ts-ignore
     return this.config.default;
   }
 
@@ -16,6 +17,7 @@ export class MasterBankConfigParser {
   }
 
   getConfigurationCount() {
+    // @ts-ignore
     return this.config.configs.length;
   }
 
@@ -35,6 +37,7 @@ export class MasterBankConfigParser {
   }
 
   getConfigs() {
+    // @ts-ignore
     const configs = this.config.configs;
 
     const parsed = [];

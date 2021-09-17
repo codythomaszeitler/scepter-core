@@ -6,10 +6,12 @@ export class BankConfig {
   }
 
   getName() {
+    // @ts-ignore
     return this.asJson.name;
   }
 
   getFilePath() {
+    // @ts-ignore
     return this.asJson.imageFilePath;
   }
 
@@ -28,6 +30,7 @@ export class BankConfig {
   }
 
   getMappings() {
+    // @ts-ignore
     const mappings = this.asJson.mappings;
     const converted = [];
 

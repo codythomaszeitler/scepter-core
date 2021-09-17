@@ -8,6 +8,7 @@ export class ExporterDecorator implements Exporter {
     exporter : Exporter;
 
     constructor(exporter? : Exporter) {
+        // @ts-ignore
         this.exporter = exporter;
     }
     

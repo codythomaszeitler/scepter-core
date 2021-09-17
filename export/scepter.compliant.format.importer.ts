@@ -17,6 +17,7 @@ export class ScepterCompliantFormatImporter extends ImporterDecorator {
 
     const scepterFormat = this.getScepterFormatFromMasterConfig();
 
+    // @ts-ignore
     const mappings = scepterFormat.getMappings();
 
     for (let i = 0; i < mappings.length; i++) {

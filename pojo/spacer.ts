@@ -180,6 +180,7 @@ export class Spacer {
         const category = categories[i];
         const currentOrder = viewContext.getOrderFor(category);
 
+        // @ts-ignore
         if (currentOrder === categoryPosition - 1) {
           categoryAbove = category;
           break;
@@ -201,6 +202,7 @@ export class Spacer {
       for (let i = 0; i < categories.length; i++) {
         const category = categories[i];
         const currentOrder = viewContext.getOrderFor(category);
+        // @ts-ignore
 
         if (currentOrder === categoryPosition + 1) {
           categoryBelow = category;
@@ -233,20 +235,25 @@ export class Spacer {
         const aboveCategory = getCategoryAbove(category);
 
         if (
-          !alreadyCreatedMissingSpacer(aboveCategory, category) &&
-          !hasSpacerBetween(aboveCategory, category)
+          // @ts-ignore
+          !alreadyCreatedMissingSpacer(aboveCategory, category) && !hasSpacerBetween(aboveCategory, category)
         ) {
+          // @ts-ignore
           missingSpacers.push(new Spacer(aboveCategory, category));
         }
       }
 
       if (viewContext.hasSpacerAfter(category)) {
+        // @ts-ignore
         const belowCategory = getCategoryBelow(category);
 
         if (
+          // @ts-ignore
           !alreadyCreatedMissingSpacer(category, belowCategory) &&
+          // @ts-ignore
           !hasSpacerBetween(category, belowCategory)
         ) {
+          // @ts-ignore
           missingSpacers.push(new Spacer(category, belowCategory));
         }
       }

@@ -56,8 +56,10 @@ export class TransactionDetail {
       const dateConverter = new DateConverter();
       element = dateConverter.intoString(dateConverter.fromString(this.detail));
     } else if (this.type == "Color") {
+      // @ts-ignore
       element = this.asGivenType().hex();
     } else if (this.type === CATEGORY_TYPE) {
+      // @ts-ignore
       element = this.asGivenType().getName();
     } else if (this.type === "number") {
       element = this.detail;

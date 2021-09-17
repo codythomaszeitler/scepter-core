@@ -37,17 +37,24 @@ export class WithViewContextExporter extends ExporterDecorator {
   }
 
   convert(transaction: Transaction, category?: Category) {
+
+    // @ts-ignore
     const color = this.viewContext.getColorFor(category);
+    // @ts-ignore
     const ordering = this.viewContext.getOrderFor(category);
     const spacer =
+      // @ts-ignore
       this.viewContext.hasSpacerBefore(category) +
       "/" +
+      // @ts-ignore
       this.viewContext.hasSpacerAfter(category);
 
     return (
       super.convert(transaction, category) +
+      // @ts-ignore
       escapeCsvElement(ordering) +
       "," +
+      // @ts-ignore
       escapeCsvElement(color?.hex()) +
       "," +
       escapeCsvElement(spacer) +

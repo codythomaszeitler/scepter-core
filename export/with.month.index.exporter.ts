@@ -44,6 +44,7 @@ export class WithMonthIndexExporter extends ExporterDecorator {
       const dateDetail = dateDetails[0];
 
       const javascriptDate = dateDetail.asGivenType();
+      // @ts-ignore
       monthIndex = javascriptDate.getMonth() + 1;
     }
 

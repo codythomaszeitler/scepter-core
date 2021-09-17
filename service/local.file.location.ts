@@ -23,6 +23,7 @@ export class LocalFileLocation implements RawDataLocation {
 
   async isEmpty() {
     const contents = await this.readFile(this.file);
+    // @ts-ignore
     return contents.trim().length === 0;
   }
 
@@ -33,6 +34,7 @@ export class LocalFileLocation implements RawDataLocation {
 
   async peek() {
     await this.readFileAsArray(this.file);
+      // @ts-ignore
     return split(this.lines[0]).join();
   }
 
@@ -49,6 +51,7 @@ export class LocalFileLocation implements RawDataLocation {
     }
 
     const contents = await this.readFile(file);
+    // @ts-ignore
     const lines = readCsv(contents);
 
     this.lines = lines;
@@ -61,6 +64,7 @@ export class LocalFileLocation implements RawDataLocation {
       const reader = new FileReader();
 
       reader.onload = (res) => {
+        // @ts-ignore
         resolve(res.target.result);
       };
       reader.onerror = (err) => reject(err);

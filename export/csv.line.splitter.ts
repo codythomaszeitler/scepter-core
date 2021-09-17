@@ -8,6 +8,7 @@ export function readCsv(input: string) {
   const asPapaParse = readString(input, { skipEmptyLines: 'greedy'});
   for (let i = 0; i < asPapaParse.data.length; i++) {
     const papaParseArray = asPapaParse.data[i];
+    // @ts-ignore
     const line = csvLineWithEscapes(papaParseArray);
     lines.push(line);
   }

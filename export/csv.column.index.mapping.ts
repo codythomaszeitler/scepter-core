@@ -1,10 +1,11 @@
 
 export class CsvColumnIndexConfig {
 
-    mappings : Array<Object>;
+    mappings: Array<Object>;
 
-    constructor(asJson : Object) {
-       this.mappings = asJson.mappings; 
+    constructor(asJson: Object) {
+        // @ts-ignore
+        this.mappings = asJson.mappings;
     }
 
     getMappings() {
@@ -13,6 +14,7 @@ export class CsvColumnIndexConfig {
 
         for (let i = 0; i < mappings.length; i++) {
             const mapping = mappings[i];
+            // @ts-ignore
             converted.push(new CsvColumnIndexMapping(mapping.csvIndex - 1, mapping.nodeFormat));
         }
 
@@ -22,10 +24,10 @@ export class CsvColumnIndexConfig {
 
 class CsvColumnIndexMapping {
 
-    columnIndex : number;
-    nodeFormat : string;
+    columnIndex: number;
+    nodeFormat: string;
 
-    constructor(columnIndex : number, nodeFormat : string) {
+    constructor(columnIndex: number, nodeFormat: string) {
         this.columnIndex = columnIndex;
         this.nodeFormat = nodeFormat;
     }

@@ -84,6 +84,7 @@ export class CsvExporter extends ExporterDecorator {
         if (detail) {
           converted += escapeCsvElement(detail.getElement()) + ",";
         } else {
+          // @ts-ignore
           converted += escapeCsvElement(category.getName()) + ",";
         }
         continue;
@@ -93,6 +94,7 @@ export class CsvExporter extends ExporterDecorator {
       const name = this.columns.getName(i);
 
       if (type === CATEGORY_TYPE) {
+        // @ts-ignore
         converted += escapeCsvElement(category.getName()) + ",";
       } else if (!name) {
         converted += ",";

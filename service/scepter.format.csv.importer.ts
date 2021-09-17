@@ -40,6 +40,7 @@ export class ScepterFormatCsvImporter implements ScepterFormatImporter {
   necessaryColumnHeaders() {
     const masterMappingInfo = new MasterBankConfigParser(MasterBankConfig);
     const csvImporter = new ByColumnNameCsvImporter(
+      // @ts-ignore
       masterMappingInfo.getConfigFor("Scepter")
     );
     csvImporter.defineIncomingFormat(this.columns);
@@ -51,6 +52,7 @@ export class ScepterFormatCsvImporter implements ScepterFormatImporter {
   convert(item: string) {
     const masterMappingInfo = new MasterBankConfigParser(MasterBankConfig);
     const csvImporter = new ByColumnNameCsvImporter(
+      // @ts-ignore
       masterMappingInfo.getConfigFor("Scepter")
     );
     csvImporter.defineIncomingFormat(this.columns);
@@ -109,6 +111,7 @@ export class ScepterFormatCsvImporter implements ScepterFormatImporter {
     for (let i = 0; i < details.length; i++) {
       const detail = details[i];
       if (detail.getColumnName() === SCEPTER_CATEGORY_COLUMN_NAME) {
+        // @ts-ignore
         category = detail.asGivenType();
       }
     }
@@ -122,6 +125,7 @@ export class ScepterFormatCsvImporter implements ScepterFormatImporter {
     for (let i = 0; i < details.length; i++) {
       const detail = details[i];
       if (detail.getColumnName() === SCEPTER_CATEGORY_COLOR_COLUMN_NAME) {
+        // @ts-ignore
         color = detail.asGivenType();
       }
     }
@@ -135,6 +139,7 @@ export class ScepterFormatCsvImporter implements ScepterFormatImporter {
     for (let i = 0; i < details.length; i++) {
       const detail = details[i];
       if (detail.getColumnName() === SCEPTER_CATEGORY_ORDERING_COLUMN_NAME) {
+        // @ts-ignore
         ordering = detail.asGivenType();
         if (isNaN(ordering)) {
           ordering = 1;
@@ -151,6 +156,7 @@ export class ScepterFormatCsvImporter implements ScepterFormatImporter {
     for (let i = 0; i < details.length; i++) {
       const detail = details[i];
       if (detail.getColumnName() === SCEPTER_CATEGORY_SPACER_COLUMN_NAME) {
+        // @ts-ignore
         spacer = detail.asGivenType();
         if (!spacer) {
           spacer = "FALSE/FALSE";

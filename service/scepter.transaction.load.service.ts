@@ -45,19 +45,23 @@ export class ScepterTransactionLoadService implements TransactionLoader {
       if (viewContext.hasCategoryViewInfo(category)) {
         viewContextBuilder.setCategoryColor(
           category,
+          // @ts-ignore
           viewContext.getColorFor(category)
         );
         viewContextBuilder.setCategoryOrdering(
           category,
+          // @ts-ignore
           viewContext.getOrderFor(category)
         );
 
         viewContextBuilder.setHasSpacerBefore(
           category,
+          // @ts-ignore
           viewContext.hasSpacerBefore(category)
         );
         viewContextBuilder.setHasSpacerAfter(
           category,
+          // @ts-ignore
           viewContext.hasSpacerAfter(category)
         );
       }
