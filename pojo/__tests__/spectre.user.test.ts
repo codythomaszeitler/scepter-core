@@ -5,6 +5,7 @@ import {
   OnCategoryRemovedEvent,
   TransactionUncategorizedListener,
   OnTransactionUncategorizedEvent,
+  OnTransactionReadyForCategorizationEvent,
 } from "../spectre.user";
 import { Category } from "../category";
 import { Currency } from "../currency";
@@ -18,8 +19,11 @@ describe("Spectre User", () => {
     testObject.addCategory(new Category("Home"));
 
     const details = [];
+    //@ts-ignore
     details.push(new TransactionDetail("Chase cc0392", "Bank"));
+    //@ts-ignore
     details.push(new TransactionDetail("JAPANESE STEAKHOUSE", "Business"));
+    //@ts-ignore
     details.push(TransactionDetail.withCurrency(new Currency(400)));
     const transaction = new Transaction(details);
 
@@ -36,6 +40,7 @@ describe("Spectre User", () => {
   it("should be able to undo a categorization", () => {
     let caughtEvent = null;
     let listener = {
+    //@ts-ignore
       onTransactionUncategorized: function (event: OnTransactionUnassociated) {
         caughtEvent = event;
       },
@@ -45,8 +50,11 @@ describe("Spectre User", () => {
     testObject.addCategory(new Category("Home"));
 
     let details = [];
+    //@ts-ignore
     details.push(new TransactionDetail("Chase cc0392", "Bank"));
+    //@ts-ignore
     details.push(new TransactionDetail("JAPANESE STEAKHOUSE", "Business"));
+    //@ts-ignore
     details.push(TransactionDetail.withCurrency(new Currency(400)));
     let transaction = new Transaction(details);
 
@@ -64,14 +72,19 @@ describe("Spectre User", () => {
     expect(testObject.getUncategorized().length).toBe(1);
     expect(testObject.getTransactionsFor(new Category("Home")).length).toBe(0);
 
+    //@ts-ignore
     expect(caughtEvent.transaction.equals(transaction)).toBe(true);
+    //@ts-ignore
     expect(caughtEvent.category.equals(new Category("Home"))).toBe(true);
 
     caughtEvent = null;
 
     details = [];
+    //@ts-ignore
     details.push(new TransactionDetail("Chase cc0392", "Bank"));
+    //@ts-ignore
     details.push(new TransactionDetail("JAPANESE STEAKHOUSE", "Business"));
+    //@ts-ignore
     details.push(TransactionDetail.withCurrency(new Currency(400)));
 
     transaction = new Transaction(details);
@@ -91,8 +104,11 @@ describe("Spectre User", () => {
     testObject.addCategory(new Category("Home"));
 
     const details = [];
+    //@ts-ignore
     details.push(new TransactionDetail("Chase cc0392", "Bank"));
+    //@ts-ignore
     details.push(new TransactionDetail("JAPANESE STEAKHOUSE", "Business"));
+    //@ts-ignore
     details.push(TransactionDetail.withCurrency(new Currency(400)));
     const transaction = new Transaction(details);
 
@@ -103,6 +119,7 @@ describe("Spectre User", () => {
     expect(testObject.getUncategorized().length).toBe(0);
 
     const otherTransaction = new Transaction([
+    //@ts-ignore
       TransactionDetail.withCurrency(new Currency(400)),
     ]);
     testObject.readyForCategorization(otherTransaction);
@@ -115,7 +132,7 @@ describe("Spectre User", () => {
   it("should emit an event when a transaction is ready to be categorized", () => {
     let caughtEvent = null;
     const listener = {
-      onTransactionReadyForCategorization: function (event) {
+      onTransactionReadyForCategorization: function (event : OnTransactionReadyForCategorizationEvent) {
         caughtEvent = event;
       },
     };
@@ -123,6 +140,7 @@ describe("Spectre User", () => {
     const testObject = new SpectreUser();
     testObject.addTransactionReadyForCategorizationListener(listener);
 
+    //@ts-ignore
     const details = [TransactionDetail.withCurrency(new Currency(400))];
     const transaction = new Transaction(details);
     testObject.readyForCategorization(transaction);
@@ -132,6 +150,7 @@ describe("Spectre User", () => {
     expect(testObject.getUncategorized().length).toBe(1);
 
     expect(caughtEvent).not.toBeNull();
+    // @ts-ignore
     expect(caughtEvent.transaction).toEqual(transaction);
 
     testObject.removeTransactionReadyForCategorizationListener(listener);
@@ -153,6 +172,7 @@ describe("Spectre User", () => {
     const category: Category = new Category("Home");
     testObject.addCategory(category.copy());
 
+    // @ts-ignore
     expect(category.copy().equals(caughtEvent.category)).toBe(true);
 
     caughtEvent = null;
@@ -177,11 +197,13 @@ describe("Spectre User", () => {
 
     testObject.addTransactionCategorizedListener(category, listener);
     const transaction = new Transaction([
+    //@ts-ignore
       TransactionDetail.withCurrency(new Currency(400)),
     ]);
     testObject.readyForCategorization(transaction);
     testObject.categorize(transaction, category);
 
+    // @ts-ignore
     expect(caughtEvent.transaction).toEqual(transaction);
 
     caughtEvent = null;
@@ -190,12 +212,14 @@ describe("Spectre User", () => {
       listener
     );
     testObject.categorize(transaction, category);
+    // @ts-ignore
     expect(caughtEvent.transaction).toEqual(transaction);
 
     testObject.removeTransactionCategorizedListener(category, listener);
     caughtEvent = null;
 
     const newTransaction = new Transaction([
+    //@ts-ignore
       TransactionDetail.withCurrency(new Currency(800)),
     ]);
     testObject.readyForCategorization(newTransaction);
@@ -209,11 +233,13 @@ describe("Spectre User", () => {
 
     const currency = new Currency(400, "USD");
     const transaction = new Transaction([
+    //@ts-ignore
       TransactionDetail.withCurrency(new Currency(400)),
     ]);
 
     for (let i = 0; i < 10; i++) {
       testObject.readyForCategorization(
+    //@ts-ignore
         new Transaction([TransactionDetail.withCurrency(new Currency(400))])
       );
     }
@@ -243,6 +269,7 @@ describe("Spectre User", () => {
     testObject.addCategory(new Category("Home"));
 
     const details = [];
+    //@ts-ignore
     details.push(new TransactionDetail("Test", "Test"));
     const transaction = new Transaction(details);
 
@@ -285,6 +312,7 @@ describe("Spectre User", () => {
 
     const currency = new Currency(400, "USD");
     const transaction = new Transaction([
+    //@ts-ignore
       TransactionDetail.withCurrency(currency),
     ]);
 
@@ -315,6 +343,7 @@ describe("Spectre User", () => {
 
   it("should throw an exception if trying to categorize against something that dne", () => {
     const testObject = new SpectreUser();
+    //@ts-ignore
     const transaction = new Transaction([new TransactionDetail("TEST", "A")]);
 
     testObject.readyForCategorization(transaction);
