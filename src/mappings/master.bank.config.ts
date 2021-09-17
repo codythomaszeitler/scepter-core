@@ -12,7 +12,7 @@ export const MasterBankConfig = {
   configs: [
     {
       name: "Chase-Credit",
-      imageFilePath: require("../../assets/chase.png"),
+      imageFilePath: require("../assets/chase.png"),
       mappings: [
         {
           csvHeaderName: "Transaction Date",
@@ -38,7 +38,7 @@ export const MasterBankConfig = {
     },
     {
       name: "Chase-Checking",
-      imageFilePath: require("../../assets/chase.png"),
+      imageFilePath: require("../assets/chase.png"),
       mappings: [
         {
           csvHeaderName: "Posting Date",
@@ -64,7 +64,7 @@ export const MasterBankConfig = {
     },
     {
       name: "Chase-Saving",
-      imageFilePath: require("../../assets/chase.png"),
+      imageFilePath: require("../assets/chase.png"),
       mappings: [
         {
           csvHeaderName: "Posting Date",
@@ -90,7 +90,7 @@ export const MasterBankConfig = {
     },
     {
       name: "USBank-Credit",
-      imageFilePath: require("../../assets/usbank.png"),
+      imageFilePath: require("../assets/usbank.png"),
       mappings: [
         {
           csvHeaderName: "Transaction Date",
@@ -116,7 +116,7 @@ export const MasterBankConfig = {
     },
     {
       name: "USBank-Checking",
-      imageFilePath: require("../../assets/usbank.png"),
+      imageFilePath: require("../assets/usbank.png"),
       mappings: [
         {
           csvHeaderName: "Date",
@@ -142,7 +142,7 @@ export const MasterBankConfig = {
     },
     {
       name: "USBank-Reserve",
-      imageFilePath: require("../../assets/usbank.png"),
+      imageFilePath: require("../assets/usbank.png"),
       mappings: [
         {
           csvHeaderName: "Date",
@@ -168,7 +168,7 @@ export const MasterBankConfig = {
     },
     {
       name: "USBank-Saving",
-      imageFilePath: require("../../assets/usbank.png"),
+      imageFilePath: require("../assets/usbank.png"),
       mappings: [
         {
           csvHeaderName: "Date",
@@ -194,7 +194,7 @@ export const MasterBankConfig = {
     },
     {
       name: "Point",
-      imageFilePath: require("../../assets/point.png"),
+      imageFilePath: require("../assets/point.png"),
       mappings: [
         {
           csvHeaderName: "Date Created",
@@ -220,7 +220,7 @@ export const MasterBankConfig = {
     },
     {
       name: "Point2",
-      imageFilePath: require("../../assets/point.png"),
+      imageFilePath: require("../assets/point.png"),
       mappings: [
         {
           csvHeaderName: "Timestamp",
@@ -241,7 +241,7 @@ export const MasterBankConfig = {
     },
     {
       name: VENMO_FORMAT.get(),
-      imageFilePath: require("../../assets/venmo.png"),
+      imageFilePath: require("../assets/venmo.png"),
       mappings: [
         {
           csvHeaderName: "Datetime",
@@ -272,7 +272,7 @@ export const MasterBankConfig = {
     },
     {
       name: "Paypal",
-      imageFilePath: require("../../assets/paypal.png"),
+      imageFilePath: require("../assets/paypal.png"),
       mappings: [
         {
           csvHeaderName: "Date",
@@ -298,7 +298,7 @@ export const MasterBankConfig = {
     },
     {
       name: SCEPTER_FORMAT.get(),
-      imageFilePath: require("../../assets/sceptre.png"),
+      imageFilePath: require("../assets/sceptre.png"),
       mappings: [
         {
           csvHeaderName: "Account",
