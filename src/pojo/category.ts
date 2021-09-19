@@ -68,7 +68,7 @@ export class Category {
     }
 
     getHeaderNames() {
-        const headerNames = new Set();
+        const headerNames = new Set<string>();
         for (const transaction of this.transactions) {
             for (const headerName of transaction.getHeaderNames()) {
                 headerNames.add(headerName);
