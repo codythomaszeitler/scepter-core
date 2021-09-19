@@ -70,9 +70,8 @@ export class Category {
     getHeaderNames() {
         const headerNames = new Set();
         for (const transaction of this.transactions) {
-            const details = transaction.getDetails();
-            for (const detail of details) {
-                headerNames.add(detail.getColumnName());
+            for (const headerName of transaction.getHeaderNames()) {
+                headerNames.add(headerName);
             }
         }
         return Array.from(headerNames.values());

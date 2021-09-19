@@ -112,6 +112,15 @@ export class Transaction {
     return element;
   }
 
+  getHeaderNames() {
+    const headerNames = new Array<string>();
+    const details = this.getDetails();
+    for (const detail of details) {
+      headerNames.push(detail.getColumnName());
+    }
+    return headerNames;
+  }
+
   equals(transaction: Transaction) {
     const areDetailsEquivalent = (
       aDetails: TransactionDetail[],
