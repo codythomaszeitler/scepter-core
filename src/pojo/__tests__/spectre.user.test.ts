@@ -564,4 +564,33 @@ describe("Spectre User", () => {
 
     expect(caughtException.message).toBe('Cannot get header names from category [Test] that does not exist');
   });
+
+  it('should be able to get all column headers in a scepter user', () => {
+    const testObject = new SpectreUser();
+
+    testObject.addCategory(new Category('Test'));
+    testObject.addCategory(new Category('Test 1'));
+
+    const transaction = new Transaction([
+      new TransactionDetail('Test', 'Test Column Name', STRING_TYPE),
+    ]);
+    testObject.readyForCategorization(transaction);
+    testObject.categorize(transaction, new Category("Test"));
+
+    const anotherTransaction = new Transaction([
+      new TransactionDetail('Test', 'Test Column Name 2', STRING_TYPE)
+    ]);
+
+    testObject.readyForCategorization(anotherTransaction);
+    testObject.categorize(anotherTransaction, new Category('Test 1'));
+
+    const headerNames = testObject.getHeaderNames();
+
+    // @ts-ignore
+    expect(headerNames.length).toBe(2);
+    // @ts-ignore
+    expect(headerNames.includes('Test Column Name')).toBeTruthy();
+    // @ts-ignore
+    expect(headerNames.includes('Test Column Name 2')).toBeTruthy();
+  });
 });

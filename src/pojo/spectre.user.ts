@@ -495,7 +495,20 @@ export class SpectreUser {
       throw new Error(`Cannot get header names from category [${category.getName()}] that does not exist`);
     }
 
-    return this._getCategory(category)?.getHeaderNames(); 
+    return found.getHeaderNames(); 
+  }
+
+  getHeaderNames() {
+
+    const headerNames = new Array<string>();
+
+    const categories = this.getCategories();
+    for (let category of categories) {
+      for (let headerName of this.getHeaderNamesFor(category)) {
+        headerNames.push(headerName);
+      }
+    }
+    return headerNames;
   }
 }
 
