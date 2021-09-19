@@ -66,4 +66,15 @@ export class Category {
 
         return category;
     }
+
+    getHeaderNames() {
+        const headerNames = new Set();
+        for (const transaction of this.transactions) {
+            const details = transaction.getDetails();
+            for (const detail of details) {
+                headerNames.add(detail.getColumnName());
+            }
+        }
+        return Array.from(headerNames.values());
+    }
 }

@@ -15,6 +15,7 @@ describe('Category', () => {
 
     it('should be able to associate a transaction' , () => {
         const testObject = new Category('Test');
+        // @ts-ignore
         testObject.associate(new Transaction([TransactionDetail.withCurrency(new Currency(500))]));
 
         const transactions = testObject.getTransactions();
@@ -23,7 +24,9 @@ describe('Category', () => {
 
     it('should be able to unassociate a transaction', () => {
         const testObject = new Category('Test');
+        // @ts-ignore
         testObject.associate(new Transaction([TransactionDetail.withCurrency(new Currency(500))]));
+        // @ts-ignore
         testObject.unassociate(new Transaction([TransactionDetail.withCurrency(new Currency(500))]));
 
         const transactions = testObject.getTransactions();
@@ -36,13 +39,14 @@ describe('Category', () => {
     });
 
     it('should throw an exception if an empty category type is given', () => {
-        let caughtException = null;
+
+        let caughtException = new Error();;
         try {
             new Category('    '); 
-        } catch (e) {
+        } catch (e ) {
+            // @ts-ignore
             caughtException = e;
         }
-
         expect(caughtException.message).toBe('Must give a value that is not just empty space');
     });
 
@@ -52,13 +56,23 @@ describe('Category', () => {
     });
 
     it('should throw an exception if a falsy type is given', () => {
-        let caughtException = null;
+        let caughtException = new Error();
         try {
+            // @ts-ignore
             new Category(null);
         } catch (e) {
+            // @ts-ignore
             caughtException = e;
         }
 
         expect(caughtException.message).toBe('Cannot build a category with a falsy type string');
+    });
+
+    it('should allow you to get column header names', () => {
+
+        const testObject = new Category('A');
+
+        testObject.associate(new Transaction( ));
+
     });
 });

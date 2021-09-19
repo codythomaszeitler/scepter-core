@@ -487,6 +487,16 @@ export class SpectreUser {
 
     return categories[foundIndex + 1];
   }
+
+  getHeaderNamesFor(category : Category) {
+    const found = this._getCategory(category);
+
+    if (!found) {
+      throw new Error(`Cannot get header names from category [${category.getName()}] that does not exist`);
+    }
+
+    return this._getCategory(category)?.getHeaderNames(); 
+  }
 }
 
 export interface TransactionReadyForCategorizationListener {

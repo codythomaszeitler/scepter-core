@@ -9,7 +9,7 @@ import {
 } from "../spectre.user";
 import { Category } from "../category";
 import { Currency } from "../currency";
-import { TransactionDetail } from "../transaction.detail";
+import { STRING_TYPE, TransactionDetail } from "../transaction.detail";
 import { Transaction, AMOUNT_TYPE } from "../transaction";
 import { OnCategoryAddedEvent, CategoryAddedListener } from "../spectre.user";
 
@@ -40,7 +40,7 @@ describe("Spectre User", () => {
   it("should be able to undo a categorization", () => {
     let caughtEvent = null;
     let listener = {
-    //@ts-ignore
+      //@ts-ignore
       onTransactionUncategorized: function (event: OnTransactionUnassociated) {
         caughtEvent = event;
       },
@@ -119,7 +119,7 @@ describe("Spectre User", () => {
     expect(testObject.getUncategorized().length).toBe(0);
 
     const otherTransaction = new Transaction([
-    //@ts-ignore
+      //@ts-ignore
       TransactionDetail.withCurrency(new Currency(400)),
     ]);
     testObject.readyForCategorization(otherTransaction);
@@ -132,7 +132,7 @@ describe("Spectre User", () => {
   it("should emit an event when a transaction is ready to be categorized", () => {
     let caughtEvent = null;
     const listener = {
-      onTransactionReadyForCategorization: function (event : OnTransactionReadyForCategorizationEvent) {
+      onTransactionReadyForCategorization: function (event: OnTransactionReadyForCategorizationEvent) {
         caughtEvent = event;
       },
     };
@@ -197,7 +197,7 @@ describe("Spectre User", () => {
 
     testObject.addTransactionCategorizedListener(category, listener);
     const transaction = new Transaction([
-    //@ts-ignore
+      //@ts-ignore
       TransactionDetail.withCurrency(new Currency(400)),
     ]);
     testObject.readyForCategorization(transaction);
@@ -219,7 +219,7 @@ describe("Spectre User", () => {
     caughtEvent = null;
 
     const newTransaction = new Transaction([
-    //@ts-ignore
+      //@ts-ignore
       TransactionDetail.withCurrency(new Currency(800)),
     ]);
     testObject.readyForCategorization(newTransaction);
@@ -233,13 +233,13 @@ describe("Spectre User", () => {
 
     const currency = new Currency(400, "USD");
     const transaction = new Transaction([
-    //@ts-ignore
+      //@ts-ignore
       TransactionDetail.withCurrency(new Currency(400)),
     ]);
 
     for (let i = 0; i < 10; i++) {
       testObject.readyForCategorization(
-    //@ts-ignore
+        //@ts-ignore
         new Transaction([TransactionDetail.withCurrency(new Currency(400))])
       );
     }
@@ -281,6 +281,7 @@ describe("Spectre User", () => {
     testObject.removeCategory(new Category("Home"));
 
     expect(testObject.getUncategorized().length).toBe(1);
+    // @ts-ignore
     expect(caughtEvent.category.equals(new Category("Home"))).toBe(true);
     caughtEvent = null;
 
@@ -301,6 +302,7 @@ describe("Spectre User", () => {
       caughtException = e;
     }
 
+    // @ts-ignore
     expect(caughtException.message).toBe(
       "Cannot remove a category that does not exist [Home]"
     );
@@ -312,16 +314,17 @@ describe("Spectre User", () => {
 
     const currency = new Currency(400, "USD");
     const transaction = new Transaction([
-    //@ts-ignore
+      //@ts-ignore
       TransactionDetail.withCurrency(currency),
     ]);
 
-    let caughtException = null;
+    let caughtException = new Error();
     try {
       testObject.categorize(transaction, new Category("Home"));
     } catch (e) {
-      caughtException = e;
+      caughtException = (e as Error);
     }
+
     expect(caughtException.message).toBe(
       "Must ready transaction for categorization"
     );
@@ -332,11 +335,11 @@ describe("Spectre User", () => {
 
     testObject.addCategory(new Category("Home"));
 
-    let caughtException = null;
+    let caughtException = new Error();
     try {
       testObject.addCategory(new Category("Home"));
     } catch (e) {
-      caughtException = e;
+      caughtException = (e as Error);
     }
     expect(caughtException.message).toBe("Category [Home] was already added");
   });
@@ -348,11 +351,11 @@ describe("Spectre User", () => {
 
     testObject.readyForCategorization(transaction);
 
-    let caughtException = null;
+    let caughtException = new Error();
     try {
       testObject.categorize(transaction, new Category("Home"));
     } catch (e) {
-      caughtException = e;
+      caughtException = (e as Error);
     }
     expect(caughtException.message).toBe(
       "[Home] category was not registered in user"
@@ -392,8 +395,10 @@ describe("Spectre User", () => {
     testObject.addCategory(new Category("C"));
 
     expect(
+      //@ts-ignore
       testObject.getCategoryBefore(new Category("B")).equals(new Category("A"))
     ).toBe(true);
+    //@ts-ignore
     expect(testObject.getCategoryBefore(new Category("A"))).toBeNull();
   });
 
@@ -403,11 +408,11 @@ describe("Spectre User", () => {
     testObject.addCategory(new Category("B"));
     testObject.addCategory(new Category("C"));
 
-    let caughtException = null;
+    let caughtException = new Error();
     try {
       testObject.getCategoryBefore(new Category("D"));
     } catch (e) {
-      caughtException = e;
+      caughtException = (e as Error);
     }
 
     expect(caughtException.message).toBe(
@@ -418,12 +423,13 @@ describe("Spectre User", () => {
   it("should throw an exception if a falsy category is given to getCategoryBefore", () => {
     const testObject = new SpectreUser();
 
-    let caughtException = null;
+    let caughtException = new Error();
 
     try {
+      // @ts-ignore
       testObject.getCategoryBefore(null);
     } catch (e) {
-      caughtException = e;
+      caughtException = (e as Error);
     }
 
     expect(caughtException.message).toBe(
@@ -439,6 +445,7 @@ describe("Spectre User", () => {
     testObject.addCategory(new Category("C"));
 
     expect(
+      // @ts-ignore
       testObject.getCategoryAfter(new Category("B")).equals(new Category("C"))
     ).toBe(true);
     expect(testObject.getCategoryAfter(new Category("C"))).toBeNull();
@@ -463,11 +470,11 @@ describe("Spectre User", () => {
     testObject.addCategory(new Category("B"));
     testObject.addCategory(new Category("C"));
 
-    let caughtException = null;
+    let caughtException = new Error();
     try {
       testObject.getCategoryAfter(new Category("D"));
     } catch (e) {
-      caughtException = e;
+      caughtException = (e as Error);
     }
 
     expect(caughtException.message).toBe(
@@ -478,12 +485,13 @@ describe("Spectre User", () => {
   it("should throw an exception if a falsy category is given to getCategoryAfter", () => {
     const testObject = new SpectreUser();
 
-    let caughtException = null;
+    let caughtException = new Error();
 
     try {
+      //@ts-ignore
       testObject.getCategoryAfter(null);
     } catch (e) {
-      caughtException = e;
+      caughtException = (e as Error);
     }
 
     expect(caughtException.message).toBe(
@@ -506,5 +514,54 @@ describe("Spectre User", () => {
     );
 
     expect(transactions.length).toBe(1);
+  });
+
+  it('should be able to get the column names of a category', () => {
+    const testObject = new SpectreUser();
+
+    testObject.addCategory(new Category('Test'));
+
+    const transaction = new Transaction([
+      new TransactionDetail('Test', 'Test Column Name', STRING_TYPE),
+      new TransactionDetail('Test', 'Test Column Name 2', STRING_TYPE)
+    ]);
+    testObject.readyForCategorization(transaction);
+    testObject.categorize(transaction, new Category("Test"));
+
+    const anotherTransaction = new Transaction([
+      new TransactionDetail('Test', 'Test Column Name', STRING_TYPE),
+      new TransactionDetail('Test', 'Test Column Name 2', STRING_TYPE)
+    ]);
+
+    const headerNames = testObject.getHeaderNamesFor(new Category("Test"));
+
+    // @ts-ignore
+    expect(headerNames.length).toBe(2);
+    // @ts-ignore
+    expect(headerNames.includes('Test Column Name')).toBeTruthy();
+    // @ts-ignore
+    expect(headerNames.includes('Test Column Name 2')).toBeTruthy();
+  });
+
+  it('should get an empty list if there are no transactions within the category', () => {
+    const testObject = new SpectreUser();
+    testObject.addCategory(new Category('Test'));
+    const headerNames = testObject.getHeaderNamesFor(new Category("Test"));
+
+    // @ts-ignore
+    expect(headerNames.length).toBe(0);
+  });
+
+  it('should throw an exception if there is no category matching ', () => {
+    const testObject = new SpectreUser();
+
+    let caughtException = new Error();
+    try {
+      testObject.getHeaderNamesFor(new Category('Test'));
+    } catch (e) {
+      caughtException = (e as Error);
+    }
+
+    expect(caughtException.message).toBe('Cannot get header names from category [Test] that does not exist');
   });
 });
