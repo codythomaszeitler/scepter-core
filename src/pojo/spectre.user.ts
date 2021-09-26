@@ -391,7 +391,7 @@ export class SpectreUser {
     );
   }
 
-  rollup(category: Category, type: string) {
+  rollup(category: Category, headerName: string) {
     const found = this._getCategory(category);
 
     // @ts-ignore
@@ -400,10 +400,12 @@ export class SpectreUser {
 
     for (let i = 0; i < transactions.length; i++) {
       const transaction = transactions[i];
-      const currency = transaction.getDetailByName(type);
+      const details = transaction.getDetailsByColumnName(headerName);
 
-      // @ts-ignore
-      computed = computed.add(currency);
+      for (let detail of details) {
+        // @ts-ignore
+        computed = computed.add(detail.asGivenType());
+      }
     }
 
     return computed;

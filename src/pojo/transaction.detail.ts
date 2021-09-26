@@ -50,6 +50,9 @@ export class TransactionDetail {
 
 
   // This was supposed to be the function that exports something as a string
+  /*  
+    This function returns the string representation that is used on transactions
+  */
   getElement() {
     let element = null;
     if (this.type === "Date") {
@@ -91,7 +94,6 @@ export class TransactionDetail {
       } else {
         asGivenType = new Category(this.detail);
       }
-
     } else if (this.type === COLOR_TYPE) {
       if (this.detail) {
         asGivenType = new Color(this.detail);
@@ -100,6 +102,8 @@ export class TransactionDetail {
       }
     } else if (this.type === 'number') {
       asGivenType = parseInt(this.detail);
+    } else if (this.type == AMOUNT_TYPE) {
+      asGivenType = new Currency(this.detail);
     }
 
     return asGivenType;

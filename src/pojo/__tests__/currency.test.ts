@@ -35,4 +35,10 @@ describe('Currency', () => {
         expect(a.equals(copy)).toBe(true);
         expect(copy.equals(a)).toBe(true);
     });
+
+    it('should be able to construct itself from a string', () => {
+        const testObject = new Currency('5');
+
+        expect(testObject.getAmount()).toBe(5);
+    });
 });

@@ -3,17 +3,29 @@ import Dinero from "dinero.js";
 
 export class Currency {
 
-  amount : number;
-  location : String;
+  private amount : number;
+  private location : String;
 
-  constructor(amount : number, location? : String) {
-    this.amount = amount;
+  // This object should REALLY be smart enough to take in any string 
+  // OR number and make it work
+
+  constructor(amount : number | string, location? : String) {
+
+    if (typeof(amount) === 'string') {
+      this.amount = Number(amount);
+    } else {
+      this.amount = amount;
+    }
 
     if (!location) {
       this.location = 'USD';
     } else {
       this.location = location;
     }
+  }
+
+  public getAmount() {
+    return this.amount;
   }
 
   add(currency : Currency) {
