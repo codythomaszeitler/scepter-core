@@ -1,5 +1,5 @@
 import { SpectreUser } from "./spectre.user";
-import { Node } from './node';
+import { Node, FunctionAddedListener } from './node';
 import { Category } from "./category";
 import { Function } from './function';
 
@@ -8,16 +8,14 @@ export class NodeUser extends SpectreUser {
     private nodes: Array<Node>;
 
     private onNodeAddedListeners: Array<NodeAddedListener>;
-    private onFunctionAddedListeners: Array<FunctionAddedListener>;
 
     constructor() {
         super();
         this.nodes = new Array<Node>();
         this.onNodeAddedListeners = new Array<NodeAddedListener>();
-        this.onFunctionAddedListeners = new Array<FunctionAddedListener>();
     }
 
-    private getNode(toFind: Node) {
+    public getNode(toFind: Node) {
         let found = new Node('NOT-FOUND');
         for (let node of this.nodes) {
             if (node.equals(toFind)) {
@@ -28,6 +26,10 @@ export class NodeUser extends SpectreUser {
         return found;
     }
 
+    public getNodes() {
+        return this.nodes.slice();
+    }
+
     public addNode(node: Node) {
         this.nodes.push(node);
         // So now we need to go through and alert all listeners.
@@ -35,6 +37,7 @@ export class NodeUser extends SpectreUser {
             const event = new OnNodeAddedEvent(node);
             listener.onNodeAdded(event);
         }
+
     }
 
     public link(category: Category, node: Node) {
@@ -45,14 +48,6 @@ export class NodeUser extends SpectreUser {
     public addFunction(node: Node, nodeFunction: Function) {
         const found = this.getNode(node);
         const functionName = found.add(nodeFunction);
-
-        for (let listener of this.onFunctionAddedListeners) {
-            const event = new OnFunctionAddedEvent(
-                node, functionName, nodeFunction
-            );
-            listener.onFunctionAdded(event);
-        }
-
         return functionName;
     }
 
@@ -72,16 +67,6 @@ export class NodeUser extends SpectreUser {
             return value !== listener;
         });
     }
-
-    public addOnFunctionAddedListener(listener: FunctionAddedListener) {
-        this.onFunctionAddedListeners.push(listener);
-    }
-
-    public removeOnFunctionAddedListener(listener : FunctionAddedListener) {
-        this.onFunctionAddedListeners = this.onFunctionAddedListeners.filter((value) => {
-            return value !== listener;
-        });
-    }
 }
 
 export class OnNodeAddedEvent {
@@ -97,19 +82,3 @@ export interface NodeAddedListener {
     onNodeAdded: (event: OnNodeAddedEvent) => void;
 }
 
-export class OnFunctionAddedEvent {
-
-    public node: Node;
-    public functionName: string;
-    public nodeFunction: Function;
-
-    constructor(node: Node, functionName: string, nodeFunction: Function) {
-        this.node = node;
-        this.functionName = functionName;
-        this.nodeFunction = nodeFunction;
-    }
-}
-
-export interface FunctionAddedListener {
-    onFunctionAdded: (event: OnFunctionAddedEvent) => void;
-}

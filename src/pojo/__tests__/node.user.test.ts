@@ -1,6 +1,5 @@
-import { NodeUser, OnNodeAddedEvent, OnFunctionAddedEvent } from "../node.user";
-import { Node } from '../node';
-import { Function } from "../function";
+import { NodeUser, OnNodeAddedEvent } from "../node.user";
+import { Node, OnFunctionAddedEvent } from '../node';
 import { ImpotentFunction } from '../impotent.function';
 
 describe('Node User', () => {
@@ -40,10 +39,11 @@ describe('Node User', () => {
             }
         }
 
-        testObject.addOnFunctionAddedListener(listener);
-
+        
         const node = new Node('Test');
         testObject.addNode(node);
+
+        testObject.getNode(new Node('Test')).addOnFunctionAddedListener(listener);
 
         const functionName = testObject.addFunction(node, new ImpotentFunction());
         expect(caughtEvent.node.equals(new Node('Test')));
@@ -52,7 +52,7 @@ describe('Node User', () => {
         caughtEvent = new OnFunctionAddedEvent(new Node('NOT-YET-EMITTED'),
             'NOT-YET-EMITTED', new ImpotentFunction());
 
-        testObject.removeOnFunctionAddedListener(listener);
+        testObject.getNode(new Node('Test')).removeOnFunctionAddedListener(listener);
 
         testObject.addFunction(node, new ImpotentFunction());
         expect(caughtEvent.node.equals(new Node('NOT-YET-EMITTED')));
