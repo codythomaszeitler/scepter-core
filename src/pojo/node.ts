@@ -38,7 +38,17 @@ export class Node {
         return contains;
     }
 
-    public add(nodeFunction: Function) {
+    public add(nodeFunction: Function, name? : string) {
+
+        const getFunctionName = () => {
+            if (name) {
+                return name;
+            } else {
+                const tempName = this.currentFunctionId + '';
+                this.currentFunctionId++;
+                return tempName;
+            }
+        }
 
         const requirements = nodeFunction.requirements();
 
@@ -57,9 +67,8 @@ export class Node {
         // 2) They could need a header WITHIN that category. 
         // 3) The could need a node and its associated function.
 
-        const functionName = this.currentFunctionId + '';
+        const functionName = getFunctionName();
         this.functions.set(functionName, nodeFunction);
-
         for (let listener of this.onFunctionAddedListeners) {
             const event = new OnFunctionAddedEvent(
                 this, functionName, nodeFunction
