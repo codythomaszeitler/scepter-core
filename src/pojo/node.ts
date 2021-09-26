@@ -1,18 +1,19 @@
 import { Category } from "./category";
 import { Function } from './function';
+import { NamedFunction } from './named.function';
 
 export class Node {
 
     private name: string;
     private linked: Array<Category>;
     private currentFunctionId: number;
-    private functions: Map<string, Function>;
+    private functions: Array<NamedFunction>;
     private onFunctionAddedListeners: Array<FunctionAddedListener>;
 
     constructor(name: string) {
         this.name = name;
         this.linked = new Array<Category>();
-        this.functions = new Map<string, Function>();
+        this.functions = new Array<NamedFunction>();
         this.currentFunctionId = 0;
         this.onFunctionAddedListeners = new Array<FunctionAddedListener>();
     }
@@ -38,7 +39,7 @@ export class Node {
         return contains;
     }
 
-    public add(nodeFunction: Function, name? : string) {
+    public add(nodeFunction: Function, name?: string) {
 
         const getFunctionName = () => {
             if (name) {
@@ -68,7 +69,9 @@ export class Node {
         // 3) The could need a node and its associated function.
 
         const functionName = getFunctionName();
-        this.functions.set(functionName, nodeFunction);
+        const namedFunction = new NamedFunction(functionName, nodeFunction);
+        this.functions.push(namedFunction);
+
         for (let listener of this.onFunctionAddedListeners) {
             const event = new OnFunctionAddedEvent(
                 this, functionName, nodeFunction
@@ -77,6 +80,10 @@ export class Node {
         }
 
         return functionName;
+    }
+
+    public getFunctions() {
+        return this.functions.slice();
     }
 
     public getFunction(functionName: string) {
@@ -88,7 +95,13 @@ export class Node {
     }
 
     private getFunctionToRun(functionName: string) {
-        const found = this.functions.get(functionName);
+        let found = null;
+        for (let namedFunction of this.functions) {
+            if (namedFunction.getName() === functionName) {
+                found = namedFunction;
+                break;
+            }
+        }
         return found;
     }
 
@@ -100,7 +113,7 @@ export class Node {
         this.onFunctionAddedListeners.push(listener);
     }
 
-    public removeOnFunctionAddedListener(listener : FunctionAddedListener) {
+    public removeOnFunctionAddedListener(listener: FunctionAddedListener) {
         this.onFunctionAddedListeners = this.onFunctionAddedListeners.filter((value) => {
             return value !== listener;
         });
