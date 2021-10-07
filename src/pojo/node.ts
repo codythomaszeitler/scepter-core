@@ -18,6 +18,14 @@ export class Node {
         this.onFunctionAddedListeners = new Array<FunctionAddedListener>();
     }
 
+    public getLinkedCategories() {
+        const linked = new Array<Category>();
+        for (let category of this.linked) {
+            linked.push(category.copy());
+        }
+        return linked;
+    }
+
     public equals(node: Node) {
         return node.name === this.name;
     }
@@ -39,6 +47,16 @@ export class Node {
         return contains;
     }
 
+    private getCategoryNames() {
+
+        const names = new Array<string>();
+
+        for (let category of this.linked) {
+            names.push(category.getName());
+        }
+        return names;
+    }
+
     public add(nodeFunction: Function, name?: string) {
 
         const getFunctionName = () => {
@@ -57,7 +75,7 @@ export class Node {
         for (let requiredCategory of requiredCategories) {
             if (!this.containsLinkedCategory(requiredCategory.getCategory())) {
                 throw new Error('Function needs category [' +
-                    requiredCategory.getCategory().getName() + '] but node user did not have it');
+                    requiredCategory.getCategory().getName() + '] but node user did not have it, had categories [' + this.getCategoryNames() + ']');
             }
         }
 

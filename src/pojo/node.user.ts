@@ -37,6 +37,9 @@ export class NodeUser extends SpectreUser {
             const event = new OnNodeAddedEvent(node);
             listener.onNodeAdded(event);
         }
+    }
+
+    public getLinkedCategories() {
 
     }
 

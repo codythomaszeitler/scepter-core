@@ -1,6 +1,5 @@
 import { Category } from "./category";
 import { CategoryRequirement } from "./category.requirement";
-import { FunctionRequirement } from "./function.requirement";
 import { FunctionValue } from "./function.value";
 import { NodeRequirement } from "./node.requirement";
 import { NodeUser } from "./node.user";
