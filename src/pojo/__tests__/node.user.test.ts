@@ -1,6 +1,7 @@
 import { NodeUser, OnNodeAddedEvent } from "../node.user";
 import { Node, OnFunctionAddedEvent } from '../node';
 import { ImpotentFunction } from '../impotent.function';
+import { Function } from '../function';
 
 describe('Node User', () => {
     it('should emit an event when a new node is added', () => {
@@ -56,5 +57,17 @@ describe('Node User', () => {
 
         testObject.addFunction(node, new ImpotentFunction());
         expect(caughtEvent.node.equals(new Node('NOT-YET-EMITTED')));
+    });
+
+    it('should be able to add portions of a functions one at a time', () => {
+        // const testObject = new NodeUser();
+
+        // const node = new Node('Test Node');
+        // testObject.addNode(node);
+
+        // node.initFunction('Test Function', new Function(
+
+        // ));
+        
     });
 });

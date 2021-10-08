@@ -1,5 +1,5 @@
 import { SpectreUser } from "./spectre.user";
-import { Node, FunctionAddedListener } from './node';
+import { Node } from './node';
 import { Category } from "./category";
 import { Function } from './function';
 

@@ -1,8 +1,8 @@
-import { FunctionValue } from "./function.value";
+import { Expression } from "./expression";
 import { NodeUser } from "./node.user";
 import { Function } from './function';
 
-export class NamedFunction implements FunctionValue {
+export class NamedFunction implements Expression {
 
     private name: string;
     private nodeFunction: Function;

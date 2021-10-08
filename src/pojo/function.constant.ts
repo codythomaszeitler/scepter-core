@@ -1,8 +1,8 @@
-import { FunctionValue } from "./function.value";
+import { Expression } from "./expression";
 import { NodeRequirement } from "./node.requirement";
 import { NodeUser } from "./node.user";
 
-export class FunctionConstant implements FunctionValue {
+export class FunctionConstant implements Expression {
 
     value: number;
 

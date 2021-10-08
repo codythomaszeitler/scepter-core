@@ -1,10 +1,10 @@
 import { Category } from "./category";
 import { CategoryRequirement } from "./category.requirement";
-import { FunctionValue } from "./function.value";
+import { Expression } from "./expression";
 import { NodeRequirement } from "./node.requirement";
 import { NodeUser } from "./node.user";
 
-export class FunctionCategoryColumn implements FunctionValue {
+export class FunctionCategoryColumn implements Expression {
 
     private category : Category;
     private headerName : string;

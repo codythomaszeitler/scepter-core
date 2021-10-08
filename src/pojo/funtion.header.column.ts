@@ -1,11 +1,11 @@
-import { FunctionValue } from "./function.value";
+import { Expression } from "./expression";
 import { NodeUser } from "./node.user";
 import { Node } from './node';
 import { Currency } from './currency';
 import { NodeRequirement } from "./node.requirement";
 
 
-export class FunctionHeaderColumn implements FunctionValue {
+export class FunctionHeaderColumn implements Expression {
 
     private node: Node;
     private headerName: string;

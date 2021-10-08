@@ -1,14 +1,14 @@
 import { FunctionOperator } from './function.operator';
-import { FunctionValue } from './function.value';
+import { Expression } from './expression';
 import { NodeUser } from './node.user';
 
-export class Function implements FunctionValue {
+export class Function implements Expression {
 
-    private leftValue: FunctionValue;
+    private leftValue: Expression;
     private operator: FunctionOperator;
-    private rightValue: FunctionValue;
+    private rightValue: Expression;
 
-    constructor(leftValue: FunctionValue, operator: FunctionOperator, rightValue: FunctionValue) {
+    constructor(leftValue: Expression, operator: FunctionOperator, rightValue: Expression) {
         this.leftValue = leftValue;
         this.operator = operator;
         this.rightValue = rightValue;
