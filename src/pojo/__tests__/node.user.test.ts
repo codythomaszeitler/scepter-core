@@ -1,7 +1,8 @@
 import { NodeUser, OnNodeAddedEvent } from "../node.user";
 import { Node, OnFunctionAddedEvent } from '../node';
-import { ImpotentFunction } from '../impotent.function';
 import { FunctionConstant } from "../function.constant";
+import { FunctionOperator } from "../function.operator";
+import { Function } from "../function";
 
 describe('Node User', () => {
     it('should emit an event when a new node is added', () => {
@@ -29,61 +30,50 @@ describe('Node User', () => {
         expect(caughtEvent.node.equals(new Node('NOT-YET-EMITTED'))).toBeTruthy();
     });
 
-    // it('should emit an event when a new function is added', () => {
-    //     const testObject = new NodeUser();
+    it('should emit an event when a new function is added', () => {
+        const testObject = new NodeUser();
 
-    //     let caughtEvent = new OnFunctionAddedEvent(new Node('NOT-YET-EMITTED'),
-    //         'NOT-YET-EMITTED', new ImpotentFunction());
-    //     const listener = {
-    //         onFunctionAdded(e: OnFunctionAddedEvent) {
-    //             caughtEvent = e;
-    //         }
-    //     }
+        let caughtEvent = new OnFunctionAddedEvent(new Node('NOT-YET-EMITTED'),
+            'NOT-YET-EMITTED', new Function(new FunctionConstant(0)));
+        const listener = {
+            onFunctionAdded(e: OnFunctionAddedEvent) {
+                caughtEvent = e;
+            }
+        }
 
 
-    //     const node = new Node('Test');
-    //     testObject.addNode(node);
+        const node = new Node('Test');
+        testObject.addNode(node);
 
-    //     testObject.getNode(new Node('Test')).addOnFunctionAddedListener(listener);
+        testObject.addOnFunctionAddedListener(node, listener);
 
-    //     const functionName = testObject.addFunction(node, new ImpotentFunction());
-    //     expect(caughtEvent.node.equals(new Node('Test')));
-    //     expect(caughtEvent.functionName).toBe(functionName);
+        const functionName = 'Test Function Name';
+        testObject.initFunction(node, functionName, new FunctionConstant(8));
+        expect(caughtEvent.node.equals(new Node('Test'))).toBeTruthy();
+        expect(caughtEvent.functionName).toBe(functionName);
 
-    //     caughtEvent = new OnFunctionAddedEvent(new Node('NOT-YET-EMITTED'),
-    //         'NOT-YET-EMITTED', new ImpotentFunction());
+        caughtEvent = new OnFunctionAddedEvent(new Node('NOT-YET-EMITTED'),
+            'NOT-YET-EMITTED', new Function(new FunctionConstant(0)));
 
-    //     testObject.getNode(new Node('Test')).removeOnFunctionAddedListener(listener);
+        testObject.removeOnFunctionAddedListener(node, listener);
 
-    //     testObject.addFunction(node, new ImpotentFunction());
-    //     expect(caughtEvent.node.equals(new Node('NOT-YET-EMITTED')));
-    // });
+        testObject.initFunction(node, 'Another Function', new FunctionConstant(8));
+        expect(caughtEvent.node.equals(new Node('NOT-YET-EMITTED')));
+    });
 
-    // it('should be able to run functions of just one expression', () => {
-    //     const testObject = new NodeUser();
+    it('should be able to add on another expression to a function', () => {
 
-    //     const node = new Node('Test Node');
-    //     testObject.addNode(node);
+        const testObject = new NodeUser();
 
-    //     const functionName = 'Test Function';
-    //     node.initFunction(functionName, new FunctionConstant(8));
+        const node = new Node('Test Node');
+        testObject.addNode(node);
 
-    //     expect(node.runFunction(functionName)).toBe(8);
-    // });
+        const functionName = 'Test Function';
+        testObject.initFunction(node, functionName, new FunctionConstant(8));
+        testObject.addExpressionTo(node, functionName, new FunctionConstant(8), FunctionOperator.ADDITION);
 
-    // it('should be able to add on another expression to a function', () => {
-
-    //     const testObject = new NodeUser();
-
-    //     const node = new Node('Test Node');
-    //     testObject.addNode(node);
-
-    //     const functionName = 'Test Function';
-    //     node.initFunction(functionName, new FunctionConstant(8));
-    //     node.addExpressionTo(functionName, new FunctionConstant(8));
-
-    //     expect(node.runFunction(functionName)).toBe(16);
-    // });
+        expect(testObject.runFunction(node, functionName)).toBe(16);
+    });
 
     it('should be able to run a function found within a node with stuff found from node.user', () => {
 

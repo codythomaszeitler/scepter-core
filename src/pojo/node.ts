@@ -37,9 +37,14 @@ export class Node {
     public initFunction(functionName: string, expression : Expression | NodeFunctionIdentifier | string | CategoryColumnIdentifier | HeaderIdentifier ) {
         const nodeFunction = new Function(this.getExpressionFrom(expression));
         this.functions.set(functionName, nodeFunction);
+
+        for (let listener of this.onFunctionAddedListeners) {
+            const event = new OnFunctionAddedEvent(this, functionName, nodeFunction);
+            listener.onFunctionAdded(event);
+        }
     }
 
-    public addExpressionTo(functionName : string, expression : Expression | NodeFunctionIdentifier | string, operator : FunctionOperator) {
+    public addExpressionTo(functionName : string, expression : Expression | NodeFunctionIdentifier | string | CategoryColumnIdentifier | HeaderIdentifier, operator : FunctionOperator) {
         const nodeFunction = this.functions.get(functionName);
         if (nodeFunction) {
             nodeFunction.addExpression(this.getExpressionFrom(expression), operator);

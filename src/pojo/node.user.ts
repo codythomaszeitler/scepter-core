@@ -1,7 +1,9 @@
 import { SpectreUser } from "./spectre.user";
-import { Node, NodeFunctionIdentifier } from './node';
+import { FunctionAddedListener, Node, NodeFunctionIdentifier } from './node';
 import { Expression } from './expression';
 import { Category, CategoryColumnIdentifier, HeaderIdentifier } from "./category";
+import { FunctionOperator } from "./function.operator";
+import { fermiCouplingDependencies } from "mathjs";
 
 export class NodeUser extends SpectreUser {
 
@@ -30,6 +32,11 @@ export class NodeUser extends SpectreUser {
         }
 
         return nodeFunction.get(this);
+    }
+
+    public addExpressionTo(node : Node, functionName : string, expression: Expression | NodeFunctionIdentifier | string | CategoryColumnIdentifier | HeaderIdentifier, operator : FunctionOperator) {
+        const found = this.getNode(node);
+        found.addExpressionTo(functionName, expression, operator);
     }
 
     public getNode(toFind: Node) {
@@ -79,6 +86,16 @@ export class NodeUser extends SpectreUser {
         this.onNodeAddedListeners = this.onNodeAddedListeners.filter((value) => {
             return value !== listener;
         });
+    }
+
+    public addOnFunctionAddedListener(node : Node, listener : FunctionAddedListener) {
+        const found = this.getNode(node);
+        found.addOnFunctionAddedListener(listener);
+    }
+
+    public removeOnFunctionAddedListener(node : Node, listener : FunctionAddedListener) {
+        const found = this.getNode(node);
+        found.removeOnFunctionAddedListener(listener);
     }
 }
 
