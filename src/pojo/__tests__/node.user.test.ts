@@ -2,6 +2,8 @@ import { NodeUser, OnNodeAddedEvent } from "../node.user";
 import { Node, OnFunctionAddedEvent } from '../node';
 import { ImpotentFunction } from '../impotent.function';
 import { Function } from '../function';
+import { FunctionConstant } from "../function.constant";
+import { NodeRequirement } from "../node.requirement";
 
 describe('Node User', () => {
     it('should emit an event when a new node is added', () => {
@@ -59,15 +61,29 @@ describe('Node User', () => {
         expect(caughtEvent.node.equals(new Node('NOT-YET-EMITTED')));
     });
 
-    it('should be able to add portions of a functions one at a time', () => {
-        // const testObject = new NodeUser();
+    it('should be able to run functions of just one expression', () => {
+        const testObject = new NodeUser();
 
-        // const node = new Node('Test Node');
-        // testObject.addNode(node);
+        const node = new Node('Test Node');
+        testObject.addNode(node);
 
-        // node.initFunction('Test Function', new Function(
+        const functionName = 'Test Function';
+        node.initFunction(functionName, new FunctionConstant(8));
 
-        // ));
-        
+        expect(node.runFunction(functionName)).toBe(8);
+    });
+
+    it('should be able to add on another expression to a function', () => {
+
+        const testObject = new NodeUser();
+
+        const node = new Node('Test Node');
+        testObject.addNode(node);
+
+        const functionName = 'Test Function';
+        node.initFunction(functionName, new FunctionConstant(8));
+        node.addExpressionTo(functionName, new FunctionConstant(8));
+
+        expect(node.runFunction(functionName)).toBe(16);
     });
 });

@@ -1,7 +1,6 @@
 import { SpectreUser } from "./spectre.user";
 import { Node } from './node';
 import { Category } from "./category";
-import { Function } from './function';
 
 export class NodeUser extends SpectreUser {
 
@@ -48,17 +47,10 @@ export class NodeUser extends SpectreUser {
         found.link(category);
     }
 
-    public addFunction(node: Node, nodeFunction: Function) {
-        const found = this.getNode(node);
-        const functionName = found.add(nodeFunction);
-        return functionName;
-    }
 
     public run(node: Node, functionName: string) {
         const foundNode = this.getNode(node);
-        const foundFunction = foundNode.getFunction(functionName);
-
-        return foundFunction.get(this);
+        return foundNode.runFunction(functionName, this);
     }
 
     public addOnNodeAddedListener(listener: NodeAddedListener) {
