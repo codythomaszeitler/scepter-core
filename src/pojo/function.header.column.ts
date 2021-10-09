@@ -21,6 +21,6 @@ export class FunctionHeaderColumn implements Expression {
     }
 
     public view() {
-        return this.headerName;
+        return '(' + this.headerName + ')';
     }
 }

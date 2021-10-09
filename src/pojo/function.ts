@@ -44,7 +44,20 @@ export class Function implements Expression {
         //     this.rightValue.view();
         return '';
     }
+
+    public composition() {
+        const compositions = new Array<FunctionPart>();
+        compositions.push(this.initialValue);
+        for (let expressionWithOperator of this.values) {
+            compositions.push(expressionWithOperator.operator);
+            compositions.push(expressionWithOperator.expression);
+        }
+        return compositions;
+    }
 }
+
+type FunctionPart = Expression | FunctionOperator;
+
 
 class ExpressionWithOperator {
 

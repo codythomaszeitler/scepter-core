@@ -39,6 +39,10 @@ export class Node {
         return this.functions.get(functionName);
     }
 
+    public getFunctions() {
+        return new Map(this.functions);
+    }
+
     public initFunction(functionName: string, expression: NodeExpression) {
         const nodeFunction = new Function(this.getExpressionFrom(expression));
         this.functions.set(functionName, nodeFunction);

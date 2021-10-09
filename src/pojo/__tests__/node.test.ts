@@ -1,3 +1,5 @@
+import { i } from 'mathjs';
+import { textSpanContainsTextSpan } from 'typescript';
 import { Category } from '../category';
 import { FunctionOperator } from '../function.operator';
 import { Node } from '../node';
@@ -89,5 +91,38 @@ describe('Node', () => {
         testObject.addExpressionTo('Test Function Name', '{Test Node.Constant Function}', FunctionOperator.ADDITION);
 
         expect(testObject.runFunction('Test Function Name', nodeUser)).toBe(58);
+    });
+
+    it('should be able to get a map of function names to function', () => {
+
+        const testObject = new Node('Test Node');
+        testObject.initFunction('Test Function', '16');
+
+        const functions = testObject.getFunctions();
+        expect(functions.size).toBe(1);
+
+        const nodeFunction = functions.get('Test Function');
+        const compositions = nodeFunction!.composition();
+
+        expect(compositions.length).toBe(1);
+        expect(compositions[0].view()).toBe('16');
+    });
+
+    it('should be able to get a function within a function with proper composition', () => {
+
+        const testObject = new Node('Test Node');
+        testObject.initFunction('Test Function', '16');
+        testObject.initFunction('Another Test Function','32');
+
+        testObject.addExpressionTo('Another Test Function', '{Test Node.Test Function}', FunctionOperator.ADDITION);
+
+        const functions = testObject.getFunctions();
+        const nodeFunction = functions.get('Another Test Function');
+
+        const compositions = nodeFunction!.composition();
+
+        expect(compositions[0].view()).toBe('32');
+        expect(compositions[1].view()).toBe('+');
+        expect(compositions[2].view()).toBe('{Test Node.Test Function}');
     });
 });

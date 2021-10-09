@@ -22,6 +22,6 @@ export class FunctionNodeName implements Expression {
     }
 
     public view() {
-        return '';
+        return '{' + this.node.getName() + '.' + this.functionName + '}';
     }
 }

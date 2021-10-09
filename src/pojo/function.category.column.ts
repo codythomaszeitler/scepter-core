@@ -30,6 +30,6 @@ export class FunctionCategoryColumn implements Expression {
     }
 
     public view() {
-        return this.category.getName() + ':' + this.headerName;
+        return '(' + this.category.getName() + ':' + this.headerName + ')';
     }
 }
