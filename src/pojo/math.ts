@@ -1,5 +1,5 @@
-import math = require('mathjs');
+import {evaluate as mathjseval} from 'mathjs';
 
 export function evaluate(expression : string) {
-    return math.evaluate(expression);
+    return mathjseval(expression);
 }
