@@ -110,6 +110,6 @@ describe('Node User', () => {
         } catch (e) {
             caughtException = (e as Error);
         }
-        expect(caughtException.message).toBe('Could not find function Test Function Name on node Test Node')
+        expect(caughtException.message).toBe('Could not find function [Test Function Name] on node [Test Node]')
     });
 });
