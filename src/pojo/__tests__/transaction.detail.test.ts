@@ -9,8 +9,16 @@ describe("Transaction Detail", () => {
       DATE_TYPE
     );
     const date = testObject.asGivenType();
-    expect(date.getFullYear()).toBe(2010);
-    expect(testObject.getElement()).toBe("01/10/2010 00:00:00");
+
+    if (!date) {
+      expect(false).toBeTruthy();
+    }
+    if (date instanceof Date) {
+      expect(date.getFullYear()).toBe(2010);
+      expect(testObject.getElement()).toBe("01/10/2010 00:00:00");
+    } else {
+      expect(false).toBeTruthy();
+    }
   });
 
   it("should be able to transition from ISO into scepter date format", () => {
@@ -23,7 +31,7 @@ describe("Transaction Detail", () => {
   });
 
   it("should throw an exception if the conversion into the underlying object does not work on construction", () => {
-    let caughtException = null;
+    let caughtException = new Error();
     try {
       new TransactionDetail(
         "This is a garbage date",
@@ -31,7 +39,7 @@ describe("Transaction Detail", () => {
         DATE_TYPE
       );
     } catch (e) {
-      caughtException = e;
+      caughtException = (e as Error);
     }
 
     expect(caughtException.message).toBe(

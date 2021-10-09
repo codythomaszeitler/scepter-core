@@ -35,25 +35,27 @@ describe("Column Estimation", () => {
   it('should throw an exception if a null location is given during construction', async () => {
 
     const testObject = new ColumnEstimation();
-    let caughtException = null;
+    let caughtException = new Error();
     try {
+      // @ts-ignore
       await testObject.estimateByLocation(null);
     } catch (e) {
-        caughtException = e;
+        caughtException = (e as Error);
     }
 
     expect(caughtException.message).toBe('Cannot create estimation without a location');
   });
 
   it("should throw an exception if the first line is null during peek", async () => {
+    // @ts-ignore
     const location = new TestLocation([null, "a,b,c", "1,1,3"]);
     const testObject = new ColumnEstimation();
 
-    let caughtException = null;
+    let caughtException = new Error();
     try {
       await testObject.estimateByLocation(location);
     } catch (e) {
-      caughtException = e;
+      caughtException = (e as Error);
     }
     expect(caughtException.message).toBe(
         "Location returned an empty line during a peek, cannot parse column from an empty string"
@@ -61,14 +63,15 @@ describe("Column Estimation", () => {
   });
 
   it("should throw an exception if the first line is undefined during peek", async () => {
+    // @ts-ignore
     const location = new TestLocation([undefined, "a,b,c", "1,1,3"]);
     const testObject = new ColumnEstimation();
 
-    let caughtException = null;
+    let caughtException = new Error();
     try {
       await testObject.estimateByLocation(location);
     } catch (e) {
-      caughtException = e;
+      caughtException = (e as Error);
     }
     expect(caughtException.message).toBe(
         "Location returned an empty line during a peek, cannot parse column from an empty string"
@@ -79,11 +82,11 @@ describe("Column Estimation", () => {
     const location = new TestLocation(["", "a,b,c", "1,1,3"]);
     const testObject = new ColumnEstimation();
 
-    let caughtException = null;
+    let caughtException = new Error();
     try {
       await testObject.estimateByLocation(location);
     } catch (e) {
-      caughtException = e;
+      caughtException = (e as Error);
     }
     expect(caughtException.message).toBe(
       "Location returned an empty line during a peek, cannot parse column from an empty string"

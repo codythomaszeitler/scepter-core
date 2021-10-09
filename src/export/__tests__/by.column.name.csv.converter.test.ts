@@ -140,11 +140,11 @@ describe("By Column Name Csv Converter", () => {
 
     const testObject = new ByColumnNameCsvImporter(byColumnIndexMapping);
 
-    let caughtException = null;
+    let caughtException = new Error();
     try {
       testObject.convert(exporter.convert(transaction));
     } catch (e) {
-      caughtException = e;
+      caughtException = (e as Error);
     }
 
     expect(caughtException.message).toBe(

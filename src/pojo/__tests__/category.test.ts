@@ -67,12 +67,4 @@ describe('Category', () => {
 
         expect(caughtException.message).toBe('Cannot build a category with a falsy type string');
     });
-
-    it('should allow you to get column header names', () => {
-
-        const testObject = new Category('A');
-
-        testObject.associate(new Transaction( ));
-
-    });
 });

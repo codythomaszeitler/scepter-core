@@ -47,6 +47,7 @@ describe("Transaction Save Service", () => {
 
     const viewContext = viewContextBuilder.build();
 
+    // @ts-ignore
     const testObject = new TransactionSaveService(exporter, viewContext);
 
     await testObject.save(spectreUser, location);

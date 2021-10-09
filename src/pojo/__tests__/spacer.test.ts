@@ -93,12 +93,13 @@ describe("Spacer", () => {
   });
 
   it("should throw an exception if a falsy list of spacers is given to hasSpacerAtBeginning", () => {
-    let caughtException = null;
+    let caughtException = new Error();
 
     try {
+      // @ts-ignore
       Spacer.hasSpacerAtBeginning(null);
     } catch (e) {
-      caughtException = e;
+      caughtException = (e as Error);
     }
 
     expect(caughtException.message).toBe(
@@ -107,12 +108,13 @@ describe("Spacer", () => {
   });
 
   it("should throw an exception if a falsy list of spacers is given to hasSpacerAtEnd", () => {
-    let caughtException = null;
+    let caughtException = new Error();
 
     try {
+      // @ts-ignore
       Spacer.hasSpacerAtEnd(null);
     } catch (e) {
-      caughtException = e;
+      caughtException = (e as Error);
     }
 
     expect(caughtException.message).toBe(
@@ -121,10 +123,12 @@ describe("Spacer", () => {
   });
 
   it("should return false if the category is empty for containsSpacerBefore", () => {
+    // @ts-ignore
     expect(Spacer.containsSpacerBefore(spacers, null)).toBe(false);
   });
 
   it("should return false if the category is empty for containsSpacerAfter", () => {
+    // @ts-ignore
     expect(Spacer.containsSpacerAfter(spacers, null)).toBe(false);
   });
 
@@ -141,11 +145,12 @@ describe("Spacer", () => {
   });
 
   it("should throw an exception if a null before category is given", () => {
-    let caughtException = null;
+    let caughtException = new Error();
     try {
+      // @ts-ignore
       new Spacer(null, afterCategorization);
     } catch (e) {
-      caughtException = e;
+      caughtException = (e as Error);
     }
 
     expect(caughtException.message).toBe(
@@ -154,11 +159,12 @@ describe("Spacer", () => {
   });
 
   it("should throw an exception if a null after category is given", () => {
-    let caughtException = null;
+    let caughtException = new Error();
     try {
+      // @ts-ignore
       new Spacer(beforeCategorization, null);
     } catch (e) {
-      caughtException = e;
+      caughtException = (e as Error);
     }
 
     expect(caughtException.message).toBe(
@@ -167,11 +173,12 @@ describe("Spacer", () => {
   });
 
   it("should throw an exception for contains space after if a falsy spacers is given", () => {
-    let caughtException = null;
+    let caughtException = new Error();
     try {
+      // @ts-ignore
       Spacer.containsSpacerAfter(null, beforeCategorization);
     } catch (e) {
-      caughtException = e;
+      caughtException = (e as Error);
     }
 
     expect(caughtException.message).toBe(
@@ -180,11 +187,12 @@ describe("Spacer", () => {
   });
 
   it("should throw an exception for contains space before if a falsy spacers is given", () => {
-    let caughtException = null;
+    let caughtException = new Error();
     try {
+      //@ts-ignore
       Spacer.containsSpacerBefore(null, afterCategorization);
     } catch (e) {
-      caughtException = e;
+      caughtException = (e as Error);
     }
 
     expect(caughtException.message).toBe(
@@ -193,11 +201,11 @@ describe("Spacer", () => {
   });
 
   it("should throw an exception if the END OF CATEGORIES is given for before", () => {
-    let caughtException = null;
+    let caughtException = new Error();
     try {
       new Spacer(Spacer.END_OF_CATEGORIES(), afterCategorization);
     } catch (e) {
-      caughtException = e;
+      caughtException = (e as Error);
     }
     expect(caughtException.message).toBe(
       "Cannot use END OF CATEGORIES constant for before category"
@@ -205,11 +213,11 @@ describe("Spacer", () => {
   });
 
   it("should throw an exception if the START OF CATEGORIES is given for after", () => {
-    let caughtException = null;
+    let caughtException = new Error();
     try {
       new Spacer(beforeCategorization, Spacer.START_OF_CATEGORIES());
     } catch (e) {
-      caughtException = e;
+      caughtException = (e as Error);
     }
     expect(caughtException.message).toBe(
       "Cannot use START OF CATEGORIES constant for after category"

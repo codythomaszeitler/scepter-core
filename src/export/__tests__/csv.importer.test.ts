@@ -136,6 +136,7 @@ describe("Csv Importer", () => {
     const testObject = new CsvImporter();
     testObject.defineIncomingFormat(columns);
 
+    // @ts-ignore
     const transaction = testObject.convert(null);
 
     expect(
@@ -175,6 +176,7 @@ describe("Csv Importer", () => {
   });
 
   it("should be able to handle when there is a null string given", () => {
+    // @ts-ignore
     const unescaped = unescapeCsvElement();
     expect(unescaped).toBe("");
   });

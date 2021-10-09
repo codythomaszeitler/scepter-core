@@ -3,8 +3,6 @@ import { Exporter } from "../export/exporter";
 import { RawDataLocation } from "./raw.data.location";
 import { DocumentSaveService } from "./document.save.service";
 import { ColumnEstimation } from "./column.estimation";
-import { Transaction } from "../pojo/transaction";
-import { STRING_TYPE, TransactionDetail } from "../pojo/transaction.detail";
 
 export class TransactionSaveService {
   exporter: Exporter;
