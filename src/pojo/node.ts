@@ -6,8 +6,7 @@ import { NodeUser } from "./node.user";
 import { ExpressionParser } from "./function.parser";
 import { FunctionCategoryColumn } from './function.category.column';
 import { FunctionNodeName } from './function.node.name';
-import { FunctionHeaderColumn } from './funtion.header.column';
-import { node } from 'webpack';
+import { FunctionHeaderColumn } from './function.header.column';
 
 export class Node {
 
@@ -35,28 +34,8 @@ export class Node {
     }
 
     public initFunction(functionName: string, expression : Expression | NodeFunctionIdentifier | string | CategoryColumnIdentifier | HeaderIdentifier ) {
-
         const nodeFunction = new Function(this.getExpressionFrom(expression));
         this.functions.set(functionName, nodeFunction);
-
-        // if (expression instanceof NodeFunctionIdentifier) {
-        //     const nodeFunction = new FunctionNodeName(expression.node, expression.functionName);
-        //     this.initFunction(functionName, nodeFunction);
-        // } else if (isExpression(expression)) {
-        //     // @ts-ignore
-        //     const nodeFunction = new Function(expression);
-        //     this.functions.set(functionName, nodeFunction);
-        // } else if (expression instanceof CategoryColumnIdentifier) {
-        //     this.initFunction(functionName, new FunctionCategoryColumn(expression.category, expression.columnName));
-        // } else if (expression instanceof HeaderIdentifier) {
-        //     const nodeFunction = new FunctionHeaderColumn(expression.headerName);
-        //     this.initFunction(functionName, nodeFunction);
-        // } else {
-        //     const parser = new ExpressionParser();
-        //     // @ts-ignore
-        //     const parsed = parser.parse(expression);
-        //     this.initFunction(functionName, parsed);
-        // }
     }
 
     public addExpressionTo(functionName : string, expression : Expression | NodeFunctionIdentifier | string, operator : FunctionOperator) {
