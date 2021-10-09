@@ -51,14 +51,22 @@ describe("Master Bank Config Parser", () => {
     const testObject = new MasterBankConfigParser(masterConfig);
 
     const chaseBankConfig = testObject.getConfigFor("Chase");
-    expect(chaseBankConfig.getName()).toBe("Chase");
+    if (chaseBankConfig) {
+      expect(chaseBankConfig.getName()).toBe("Chase");
+    } else {
+      expect(false).toBeTruthy();
+    }
   });
 
   it("should allow you to get the file path name", () => {
     const testObject = new MasterBankConfigParser(masterConfig);
 
     const chaseBankConfig = testObject.getConfigFor("Chase");
-    expect(chaseBankConfig.getFilePath()).toBe("test file path");
+    if (chaseBankConfig) {
+      expect(chaseBankConfig.getFilePath()).toBe("test file path");
+    } else {
+      expect(false).toBeTruthy();
+    }
   });
 
   it("should be able to parse all configs within the master info", () => {

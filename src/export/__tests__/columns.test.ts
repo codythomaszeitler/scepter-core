@@ -43,11 +43,11 @@ describe("Columns", () => {
 
 
   it("should throw an exception if the index is out of bounds on getName", () => {
-    let caughtException = null;
+    let caughtException = new Error();
     try {
       testObject.getName(4);
     } catch (e) {
-      caughtException = e;
+      caughtException = (e as Error);
     }
 
     expect(caughtException.message).toBe(
@@ -56,11 +56,11 @@ describe("Columns", () => {
   });
 
   it("should throw an exception if the index is out of bounds on getType", () => {
-    let caughtException = null;
+    let caughtException = new Error();
     try {
       testObject.getType(4);
     } catch (e) {
-      caughtException = e;
+      caughtException = (e as Error);
     }
 
     expect(caughtException.message).toBe(

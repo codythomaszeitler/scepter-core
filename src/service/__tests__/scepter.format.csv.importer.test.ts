@@ -73,9 +73,8 @@ describe("Scepter Format Csv Importer", () => {
       SCEPTER_COMPLIANT_COLUMNS.getType(0)
     );
     expect(
-      transaction
-        .getDetailByName(SCEPTER_COMPLIANT_COLUMNS.getName(0))
-        .equals(transationDetail)
+      // @ts-ignore
+      transaction.getDetailByName(SCEPTER_COMPLIANT_COLUMNS.getName(0)).equals(transationDetail)
     ).toBe(true);
 
     const category = transactionAndCategory.getCategory();
@@ -96,9 +95,8 @@ describe("Scepter Format Csv Importer", () => {
       SCEPTER_COMPLIANT_COLUMNS.getType(0)
     );
     expect(
-      transaction
-        .getDetailByName(SCEPTER_COMPLIANT_COLUMNS.getName(0))
-        .equals(transationDetail)
+      // @ts-ignore
+      transaction.getDetailByName(SCEPTER_COMPLIANT_COLUMNS.getName(0)).equals(transationDetail)
     ).toBe(true);
 
     const category = transactionAndCategory.getCategory();
@@ -121,9 +119,8 @@ describe("Scepter Format Csv Importer", () => {
       SCEPTER_COMPLIANT_COLUMNS.getType(0)
     );
     expect(
-      transaction
-        .getDetailByName(SCEPTER_COMPLIANT_COLUMNS.getName(0))
-        .equals(transationDetail)
+      // @ts-ignore
+      transaction.getDetailByName(SCEPTER_COMPLIANT_COLUMNS.getName(0)).equals(transationDetail)
     ).toBe(true);
 
     const category = transactionAndCategory.getCategory();
@@ -135,9 +132,8 @@ describe("Scepter Format Csv Importer", () => {
       SCEPTER_COMPLIANT_COLUMNS.getType(2)
     );
     expect(
-      transaction
-        .getDetailByName(SCEPTER_COMPLIANT_COLUMNS.getName(2))
-        .equals(anotherTransationDetail)
+      // @ts-ignore
+      transaction.getDetailByName(SCEPTER_COMPLIANT_COLUMNS.getName(2)).equals(anotherTransationDetail)
     ).toBe(true);
   });
 
@@ -145,6 +141,7 @@ describe("Scepter Format Csv Importer", () => {
     const testObject = new ScepterFormatCsvImporter();
 
     testObject.defineIncomingFormat(SCEPTER_COMPLIANT_COLUMNS);
+    // @ts-ignore
     const transactionAndCategory = testObject.convert();
 
     const transaction = transactionAndCategory.getTransaction();
@@ -155,9 +152,8 @@ describe("Scepter Format Csv Importer", () => {
       SCEPTER_COMPLIANT_COLUMNS.getType(0)
     );
     expect(
-      transaction
-        .getDetailByName(SCEPTER_COMPLIANT_COLUMNS.getName(0))
-        ?.equals(expectedTransactionDetail)
+      // @ts-ignore
+      transaction.getDetailByName(SCEPTER_COMPLIANT_COLUMNS.getName(0)).equals(expectedTransactionDetail)
     ).toBe(true);
 
     const category = transactionAndCategory.getCategory();
@@ -169,9 +165,8 @@ describe("Scepter Format Csv Importer", () => {
       SCEPTER_COMPLIANT_COLUMNS.getType(2)
     );
     expect(
-      transaction
-        .getDetailByName(SCEPTER_COMPLIANT_COLUMNS.getName(2))
-        .equals(anotherTransactionDetail)
+      // @ts-ignore
+      transaction.getDetailByName(SCEPTER_COMPLIANT_COLUMNS.getName(2)).equals(anotherTransactionDetail)
     ).toBe(true);
   });
 
@@ -179,6 +174,7 @@ describe("Scepter Format Csv Importer", () => {
     const testObject = new ScepterFormatCsvImporter();
 
     testObject.defineIncomingFormat(SCEPTER_COMPLIANT_COLUMNS);
+    // @ts-ignore
     const transactionAndCategory = testObject.convert(null);
 
     const transaction = transactionAndCategory.getTransaction();
@@ -189,9 +185,8 @@ describe("Scepter Format Csv Importer", () => {
       SCEPTER_COMPLIANT_COLUMNS.getType(0)
     );
     expect(
-      transaction
-        .getDetailByName(SCEPTER_COMPLIANT_COLUMNS.getName(0))
-        .equals(expectedTransactionDetail)
+      // @ts-ignore
+      transaction.getDetailByName(SCEPTER_COMPLIANT_COLUMNS.getName(0)).equals(expectedTransactionDetail)
     ).toBe(true);
 
     const category = transactionAndCategory.getCategory();
@@ -203,9 +198,8 @@ describe("Scepter Format Csv Importer", () => {
       SCEPTER_COMPLIANT_COLUMNS.getType(2)
     );
     expect(
-      transaction
-        .getDetailByName(SCEPTER_COMPLIANT_COLUMNS.getName(2))
-        .equals(anotherTransactionDetail)
+      // @ts-ignore
+      transaction.getDetailByName(SCEPTER_COMPLIANT_COLUMNS.getName(2)).equals(anotherTransactionDetail)
     ).toBe(true);
   });
 
@@ -213,6 +207,7 @@ describe("Scepter Format Csv Importer", () => {
     const testObject = new ScepterFormatCsvImporter();
 
     testObject.defineIncomingFormat(SCEPTER_COMPLIANT_COLUMNS);
+    // @ts-ignore
     const transactionAndCategory = testObject.convert(null);
 
     const transaction = transactionAndCategory.getTransaction();
@@ -223,9 +218,8 @@ describe("Scepter Format Csv Importer", () => {
       SCEPTER_COMPLIANT_COLUMNS.getType(0)
     );
     expect(
-      transaction
-        .getDetailByName(SCEPTER_COMPLIANT_COLUMNS.getName(0))
-        .equals(expectedTransactionDetail)
+      // @ts-ignore
+      transaction.getDetailByName(SCEPTER_COMPLIANT_COLUMNS.getName(0)).equals(expectedTransactionDetail)
     ).toBe(true);
 
     const category = transactionAndCategory.getCategory();
@@ -237,9 +231,8 @@ describe("Scepter Format Csv Importer", () => {
       SCEPTER_COMPLIANT_COLUMNS.getType(2)
     );
     expect(
-      transaction
-        .getDetailByName(SCEPTER_COMPLIANT_COLUMNS.getName(2))
-        .equals(anotherTransactionDetail)
+      // @ts-ignore
+      transaction.getDetailByName(SCEPTER_COMPLIANT_COLUMNS.getName(2)).equals(anotherTransactionDetail)
     ).toBe(true);
   });
 });

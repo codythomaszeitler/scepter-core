@@ -4,7 +4,7 @@ import { TestLocation } from "./test.location";
 
 describe("Document Load Service", () => {
   it("should be able to load a file from a filesystem", async () => {
-    const location: Location = new TestLocation(["1", "2", "3"]);
+    const location: RawDataLocation = new TestLocation(["1", "2", "3"]);
 
     const testObject = new DocumentLoadService(location);
     const data = await testObject.fetchall();
@@ -16,7 +16,7 @@ describe("Document Load Service", () => {
   });
 
   it("should remove all empty lines when fetchall is called", async () => {
-    const location: Location = new TestLocation(["1", "     ", "    \t ", ""]);
+    const location: RawDataLocation = new TestLocation(["1", "     ", "    \t ", ""]);
 
     const testObject = new DocumentLoadService(location);
     const loaded = await testObject.fetchall();

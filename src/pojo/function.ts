@@ -1,43 +1,58 @@
 import { FunctionOperator } from './function.operator';
 import { Expression } from './expression';
 import { NodeUser } from './node.user';
+import { evaluate } from './math';
 
 export class Function implements Expression {
 
-    private leftValue: Expression;
-    private operator: FunctionOperator;
-    private rightValue: Expression;
+    private initialValue : Expression;
+    private values: Array<ExpressionWithOperator>;
 
-    constructor(leftValue: Expression, operator: FunctionOperator, rightValue: Expression) {
-        this.leftValue = leftValue;
-        this.operator = operator;
-        this.rightValue = rightValue;
+    constructor(expression : Expression) {
+        this.initialValue = expression;
+        this.values = new Array<ExpressionWithOperator>();
+    }
+
+    public addExpression(expression : Expression, operator : FunctionOperator) {
+        this.values.push(
+            new ExpressionWithOperator(operator, expression)
+        );
     }
 
     public requirements() {
-        return this.leftValue.requirements().append(this.rightValue.requirements());
+        // return this.leftValue.requirements().append(this.rightValue.requirements());
+        return this.initialValue.requirements();
     }
 
     public get(nodeUser: NodeUser) {
-        const parsedLeftValue = this.leftValue.get(nodeUser);
-        const parsedRightValue = this.rightValue.get(nodeUser);
 
-        if (FunctionOperator.DIVISION.equals(this.operator)) {
-            return parsedLeftValue / parsedRightValue;
-        } else if (FunctionOperator.ADDITION.equals(this.operator)) {
-            return parsedLeftValue + parsedRightValue;
-        } else if (FunctionOperator.MULTIPLICATION.equals(this.operator)) {
-            return parsedLeftValue * parsedRightValue;
-        } else if (FunctionOperator.SUBTRACTION.equals(this.operator)) {
-            return parsedLeftValue - parsedRightValue;
-        } else {
-            throw new Error('Unsupported');
+        let fullExpression = this.initialValue.get(nodeUser).toString();
+        for (let expressionWithOperator of this.values) {
+
+            const expression = expressionWithOperator.expression.get(nodeUser).toString();
+            const operator = expressionWithOperator.operator.view();
+
+            fullExpression = fullExpression + operator + expression;
         }
+
+        return evaluate(fullExpression);
     }
 
     public view() {
-        return this.leftValue.view() +
-            this.operator.view() +
-            this.rightValue.view();
+        // return this.leftValue.view() +
+        //     this.operator.view() +
+        //     this.rightValue.view();
+        return '';
+    }
+}
+
+class ExpressionWithOperator {
+
+    public expression : Expression;
+    public operator : FunctionOperator;
+
+    public constructor(operator : FunctionOperator, expression : Expression) {
+        this.expression = expression;
+        this.operator = operator;
     }
 }

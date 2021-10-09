@@ -1,26 +1,104 @@
-import { Category } from "./category";
+import { Category, CategoryColumnIdentifier, HeaderIdentifier } from './category';
 import { Function } from './function';
-import { NamedFunction } from './named.function';
+import { Expression, isExpression } from './expression';
+import { FunctionOperator } from "./function.operator";
+import { NodeUser } from "./node.user";
+import { ExpressionParser } from "./function.parser";
+import { FunctionCategoryColumn } from './function.category.column';
+import { FunctionNodeName } from './function.node.name';
+import { FunctionHeaderColumn } from './function.header.column';
+import { isJsxFragment } from 'typescript';
+import { e } from 'mathjs';
 
 export class Node {
 
     private name: string;
-    private linked: Array<Category>;
-    private currentFunctionId: number;
-    private functions: Array<NamedFunction>;
+    private linkedCategories: Array<Category>;
+    private linkedNodes: Array<Node>;
     private onFunctionAddedListeners: Array<FunctionAddedListener>;
+
+    private onFunctionChangedListeners: Map<string, Array<FunctionChangedListener>>;
+
+    private functions: Map<string, Function>;
 
     constructor(name: string) {
         this.name = name;
-        this.linked = new Array<Category>();
-        this.functions = new Array<NamedFunction>();
-        this.currentFunctionId = 0;
+        this.linkedCategories = new Array<Category>();
+        this.linkedNodes = new Array<Node>();
+        this.functions = new Map<string, Function>();
         this.onFunctionAddedListeners = new Array<FunctionAddedListener>();
+        this.onFunctionChangedListeners = new Map<string, Array<FunctionChangedListener>>();
+    }
+
+    public getFunction(functionName: string) {
+        if (!this.functions.has(functionName)) {
+            const errorMessage = `Could not find function [${functionName}] on node [${this.name}]`
+            throw new Error(errorMessage);
+        }
+
+        return this.functions.get(functionName);
+    }
+
+    public initFunction(functionName: string, expression: NodeExpression) {
+        const nodeFunction = new Function(this.getExpressionFrom(expression));
+        this.functions.set(functionName, nodeFunction);
+
+        for (let listener of this.onFunctionAddedListeners) {
+            const event = new OnFunctionAddedEvent(this, functionName, nodeFunction);
+            listener.onFunctionAdded(event);
+        }
+    }
+
+    public addExpressionTo(functionName: string, expression: NodeExpression, operator: FunctionOperator) {
+        const nodeFunction = this.functions.get(functionName);
+        if (nodeFunction) {
+            const realizedExpression = this.getExpressionFrom(expression);
+            nodeFunction.addExpression(realizedExpression, operator);
+            this.notifyFunctionChangedListeners(functionName, realizedExpression, operator);
+        }
+    }
+
+    private notifyFunctionChangedListeners(functionName : string, expression : Expression, operator : FunctionOperator) {
+        const listeners = this.onFunctionChangedListeners.get(functionName);
+        if (listeners) {
+            for (let listener of listeners) {
+                const event = new OnFunctionChangedEvent(this, functionName, expression, operator);
+                listener.onFunctionChanged(event);
+            }
+        }
+    }
+
+    // @ts-ignore
+    private getExpressionFrom(expression: Expression | NodeFunctionIdentifier | string | CategoryColumnIdentifier | HeaderIdentifier) {
+        if (isExpression(expression)) {
+            return expression;
+        }
+
+        if (expression instanceof NodeFunctionIdentifier) {
+            const nodeFunction = new FunctionNodeName(expression.node, expression.functionName);
+            return nodeFunction;
+        } else if (expression instanceof CategoryColumnIdentifier) {
+            return new FunctionCategoryColumn(expression.category, expression.columnName);
+        } else if (expression instanceof HeaderIdentifier) {
+            const nodeFunction = new FunctionHeaderColumn(expression.headerName);
+            return nodeFunction;
+        } else {
+            const parser = new ExpressionParser();
+            // @ts-ignore
+            const parsed = parser.parse(expression);
+            return this.getExpressionFrom(parsed);
+        }
+    }
+
+
+    public runFunction(functionName: string, nodeUser: NodeUser) {
+        const nodeFunction = this.functions.get(functionName);
+        return nodeFunction?.get(nodeUser);
     }
 
     public getLinkedCategories() {
         const linked = new Array<Category>();
-        for (let category of this.linked) {
+        for (let category of this.linkedCategories) {
             linked.push(category.copy());
         }
         return linked;
@@ -30,97 +108,12 @@ export class Node {
         return node.name === this.name;
     }
 
-    public link(category: Category) {
-        this.linked.push(category.copy());
-    }
-
-    private containsLinkedCategory(toCheck: Category) {
-        let contains = false;
-
-        for (let category of this.linked) {
-            if (toCheck.equals(category)) {
-                contains = true;
-                break;
-            }
+    public link(linked: Category | Node) {
+        if (linked instanceof Category) {
+            this.linkedCategories.push(linked.copy());
+        } else {
+            this.linkedNodes.push(linked);
         }
-
-        return contains;
-    }
-
-    private getCategoryNames() {
-
-        const names = new Array<string>();
-
-        for (let category of this.linked) {
-            names.push(category.getName());
-        }
-        return names;
-    }
-
-    public add(nodeFunction: Function, name?: string) {
-
-        const getFunctionName = () => {
-            if (name) {
-                return name;
-            } else {
-                const tempName = this.currentFunctionId + '';
-                this.currentFunctionId++;
-                return tempName;
-            }
-        }
-
-        const requirements = nodeFunction.requirements();
-
-        const requiredCategories = requirements.getCategoryRequirements();
-        for (let requiredCategory of requiredCategories) {
-            if (!this.containsLinkedCategory(requiredCategory.getCategory())) {
-                throw new Error('Function needs category [' +
-                    requiredCategory.getCategory().getName() + '] but node user did not have it, had categories [' + this.getCategoryNames() + ']');
-            }
-        }
-
-        // So what COULD be the requirements at this point?
-        // Each function will could need these things:
-
-        // 1) They could need a category.
-        // 2) They could need a header WITHIN that category. 
-        // 3) The could need a node and its associated function.
-
-        const functionName = getFunctionName();
-        const namedFunction = new NamedFunction(functionName, nodeFunction);
-        this.functions.push(namedFunction);
-
-        for (let listener of this.onFunctionAddedListeners) {
-            const event = new OnFunctionAddedEvent(
-                this, functionName, nodeFunction
-            );
-            listener.onFunctionAdded(event);
-        }
-
-        return functionName;
-    }
-
-    public getFunctions() {
-        return this.functions.slice();
-    }
-
-    public getFunction(functionName: string) {
-        const found = this.getFunctionToRun(functionName);
-        if (!found) {
-            throw new Error('Function with name [' + functionName + '] was not found.');
-        }
-        return found;
-    }
-
-    private getFunctionToRun(functionName: string) {
-        let found = null;
-        for (let namedFunction of this.functions) {
-            if (namedFunction.getName() === functionName) {
-                found = namedFunction;
-                break;
-            }
-        }
-        return found;
     }
 
     public getName() {
@@ -136,7 +129,34 @@ export class Node {
             return value !== listener;
         });
     }
+
+    public addOnFunctionChangedListener(functionName : string, listener : FunctionChangedListener) {
+        if (!this.onFunctionChangedListeners.has(functionName)) {
+            this.onFunctionChangedListeners.set(functionName, new Array<FunctionChangedListener>());
+        }
+        this.onFunctionChangedListeners.get(functionName)!.push(listener);
+    }
+
+    public removeOnFunctionChangedListener(functionName : string, listener : FunctionChangedListener) {
+        if (this.onFunctionChangedListeners.has(functionName)) {
+            let listeners = this.onFunctionChangedListeners.get(functionName);
+
+            listeners = listeners?.filter((inner) => {
+                return listener !== inner;
+            });
+
+            if (listeners) {
+                this.onFunctionChangedListeners.set(functionName, listeners);
+            }
+        }
+    }
 }
+
+type NodeExpression = Expression |
+    NodeFunctionIdentifier | 
+    string | 
+    CategoryColumnIdentifier | 
+    HeaderIdentifier;
 
 export class OnFunctionAddedEvent {
 
@@ -153,4 +173,39 @@ export class OnFunctionAddedEvent {
 
 export interface FunctionAddedListener {
     onFunctionAdded: (event: OnFunctionAddedEvent) => void;
+}
+
+export class NodeFunctionIdentifier {
+
+    public node: Node;
+    public functionName: string;
+
+    public constructor(node: Node, functionName: string) {
+        this.node = node;
+        this.functionName = functionName;
+    }
+
+    public equals(toCompare: NodeFunctionIdentifier) {
+        return this.node.equals(toCompare.node) &&
+            this.functionName === toCompare.functionName;
+    }
+}
+
+export interface FunctionChangedListener {
+    onFunctionChanged: (event: OnFunctionChangedEvent) => void;
+}
+
+export class OnFunctionChangedEvent {
+    
+    public node : Node;
+    public functionName : string;
+    public expression : Expression;
+    public operator : FunctionOperator;
+
+    constructor(node: Node, functionName: string, expression: Expression, operator : FunctionOperator) {
+        this.node = node;
+        this.functionName = functionName;
+        this.expression = expression;
+        this.operator = operator;
+    }
 }

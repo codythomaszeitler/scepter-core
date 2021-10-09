@@ -77,3 +77,33 @@ export class Category {
         return Array.from(headerNames.values());
     }
 }
+
+export class CategoryColumnIdentifier {
+
+    public category : Category;
+    public columnName : string;
+
+    public constructor(category : Category, columnName : string) {
+        this.category = category.copy();
+        this.columnName = columnName;
+    }
+
+    public equals(categoryColumnIdentifier : CategoryColumnIdentifier) {
+        return this.category.equals(categoryColumnIdentifier.category) &&
+            this.columnName === categoryColumnIdentifier.columnName;
+    }
+}
+
+export class HeaderIdentifier {
+
+    public headerName : string;
+
+    public constructor(headerName : string) {
+        this.headerName = headerName;
+    }
+
+    public equals(headerIdentifier : HeaderIdentifier) {
+        return this.headerName === headerIdentifier.headerName;
+    }
+
+}

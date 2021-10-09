@@ -1,7 +1,9 @@
 import { SpectreUser } from "./spectre.user";
-import { Node } from './node';
-import { Category } from "./category";
-import { Function } from './function';
+import { FunctionAddedListener, FunctionChangedListener, Node, NodeFunctionIdentifier } from './node';
+import { Expression } from './expression';
+import { Category, CategoryColumnIdentifier, HeaderIdentifier } from "./category";
+import { FunctionOperator } from "./function.operator";
+import { fermiCouplingDependencies } from "mathjs";
 
 export class NodeUser extends SpectreUser {
 
@@ -13,6 +15,28 @@ export class NodeUser extends SpectreUser {
         super();
         this.nodes = new Array<Node>();
         this.onNodeAddedListeners = new Array<NodeAddedListener>();
+    }
+
+    public initFunction(node: Node, functionName: string, expression: Expression | NodeFunctionIdentifier | string | CategoryColumnIdentifier | HeaderIdentifier) {
+        const found = this.getNode(node);
+        found.initFunction(functionName, expression);
+    }
+
+    public runFunction(node : Node, functionName : string) {
+        const found = this.getNode(node);
+
+        const nodeFunction = found.getFunction(functionName);
+        if (!nodeFunction) {
+            const errorMessage = `Could not find function [${functionName}] on node [${node.getName()}]`
+            throw new Error(errorMessage);
+        }
+
+        return nodeFunction.get(this);
+    }
+
+    public addExpressionTo(node : Node, functionName : string, expression: Expression | NodeFunctionIdentifier | string | CategoryColumnIdentifier | HeaderIdentifier, operator : FunctionOperator) {
+        const found = this.getNode(node);
+        found.addExpressionTo(functionName, expression, operator);
     }
 
     public getNode(toFind: Node) {
@@ -48,17 +72,10 @@ export class NodeUser extends SpectreUser {
         found.link(category);
     }
 
-    public addFunction(node: Node, nodeFunction: Function) {
-        const found = this.getNode(node);
-        const functionName = found.add(nodeFunction);
-        return functionName;
-    }
 
     public run(node: Node, functionName: string) {
         const foundNode = this.getNode(node);
-        const foundFunction = foundNode.getFunction(functionName);
-
-        return foundFunction.get(this);
+        return foundNode.runFunction(functionName, this);
     }
 
     public addOnNodeAddedListener(listener: NodeAddedListener) {
@@ -69,6 +86,26 @@ export class NodeUser extends SpectreUser {
         this.onNodeAddedListeners = this.onNodeAddedListeners.filter((value) => {
             return value !== listener;
         });
+    }
+
+    public addOnFunctionAddedListener(node : Node, listener : FunctionAddedListener) {
+        const found = this.getNode(node);
+        found.addOnFunctionAddedListener(listener);
+    }
+
+    public removeOnFunctionAddedListener(node : Node, listener : FunctionAddedListener) {
+        const found = this.getNode(node);
+        found.removeOnFunctionAddedListener(listener);
+    }
+
+    public addOnFunctionChangedListener(node : Node, functionName : string, listener : FunctionChangedListener) {
+        const found = this.getNode(node);
+        found.addOnFunctionChangedListener(functionName, listener);
+    }
+
+    public removeOnFunctionChangedListener(node : Node, functionName : string, listener : FunctionChangedListener) {
+        const found = this.getNode(node);
+        found.removeOnFunctionChangedListener(functionName, listener);
     }
 }
 
