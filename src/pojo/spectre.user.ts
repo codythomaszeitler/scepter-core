@@ -391,20 +391,40 @@ export class SpectreUser {
     );
   }
 
-  rollup(category: Category, headerName: string) {
-    const found = this._getCategory(category);
+  rollup(category: Category | string, headerName? : string) {
 
-    // @ts-ignore
-    const transactions = found.getTransactions();
+    if (category instanceof Category && !headerName) {
+      throw new Error('If using a category, must provide a header name');
+    }
+
+    const rollupCategory = (toRollup : Category, headerName : string) => {
+      let computed = new Currency(0, "USD");
+      const found = this._getCategory(toRollup);
+  
+      // @ts-ignore
+      const transactions = found.getTransactions();
+  
+      for (let i = 0; i < transactions.length; i++) {
+        const transaction = transactions[i];
+        const details = transaction.getDetailsByColumnName(headerName);
+  
+        for (let detail of details) {
+          // @ts-ignore
+          computed = computed.add(detail.asGivenType());
+        }
+      }
+      return computed;
+    }
+
     let computed = new Currency(0, "USD");
 
-    for (let i = 0; i < transactions.length; i++) {
-      const transaction = transactions[i];
-      const details = transaction.getDetailsByColumnName(headerName);
-
-      for (let detail of details) {
-        // @ts-ignore
-        computed = computed.add(detail.asGivenType());
+    if (category instanceof Category) {
+      if (headerName) {
+        computed = rollupCategory(category, headerName);
+      }
+    } else {
+      for (let inner of this.categories) {
+        computed = computed.add(rollupCategory(inner, category));
       }
     }
 

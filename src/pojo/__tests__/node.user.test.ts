@@ -1,9 +1,7 @@
 import { NodeUser, OnNodeAddedEvent } from "../node.user";
 import { Node, OnFunctionAddedEvent } from '../node';
 import { ImpotentFunction } from '../impotent.function';
-import { Function } from '../function';
 import { FunctionConstant } from "../function.constant";
-import { NodeRequirement } from "../node.requirement";
 
 describe('Node User', () => {
     it('should emit an event when a new node is added', () => {

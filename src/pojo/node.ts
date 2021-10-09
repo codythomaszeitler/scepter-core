@@ -1,9 +1,13 @@
-import { Category } from "./category";
+import { Category, CategoryColumnIdentifier, HeaderIdentifier } from './category';
 import { Function } from './function';
-import { Expression } from './expression';
+import { Expression, isExpression } from './expression';
 import { FunctionOperator } from "./function.operator";
 import { NodeUser } from "./node.user";
-import { node } from "webpack";
+import { ExpressionParser } from "./function.parser";
+import { FunctionCategoryColumn } from './function.category.column';
+import { FunctionNodeName } from './function.node.name';
+import { FunctionHeaderColumn } from './funtion.header.column';
+import { node } from 'webpack';
 
 export class Node {
 
@@ -30,35 +34,57 @@ export class Node {
         return this.functions.get(functionName);
     }
 
-    public initFunction(functionName: string, expression : Expression | NodeFunctionIdentifier) {
+    public initFunction(functionName: string, expression : Expression | NodeFunctionIdentifier | string | CategoryColumnIdentifier | HeaderIdentifier ) {
 
-        if (expression instanceof NodeFunctionIdentifier) {
-            const nodeFunction = expression.node.getFunction(expression.functionName);
-            if (nodeFunction) {
-                this.functions.set(functionName, nodeFunction);
-            }
-        } else {
-            const nodeFunction = new Function(expression);
-            this.functions.set(functionName, nodeFunction);
+        const nodeFunction = new Function(this.getExpressionFrom(expression));
+        this.functions.set(functionName, nodeFunction);
+
+        // if (expression instanceof NodeFunctionIdentifier) {
+        //     const nodeFunction = new FunctionNodeName(expression.node, expression.functionName);
+        //     this.initFunction(functionName, nodeFunction);
+        // } else if (isExpression(expression)) {
+        //     // @ts-ignore
+        //     const nodeFunction = new Function(expression);
+        //     this.functions.set(functionName, nodeFunction);
+        // } else if (expression instanceof CategoryColumnIdentifier) {
+        //     this.initFunction(functionName, new FunctionCategoryColumn(expression.category, expression.columnName));
+        // } else if (expression instanceof HeaderIdentifier) {
+        //     const nodeFunction = new FunctionHeaderColumn(expression.headerName);
+        //     this.initFunction(functionName, nodeFunction);
+        // } else {
+        //     const parser = new ExpressionParser();
+        //     // @ts-ignore
+        //     const parsed = parser.parse(expression);
+        //     this.initFunction(functionName, parsed);
+        // }
+    }
+
+    public addExpressionTo(functionName : string, expression : Expression | NodeFunctionIdentifier | string, operator : FunctionOperator) {
+        const nodeFunction = this.functions.get(functionName);
+        if (nodeFunction) {
+            nodeFunction.addExpression(this.getExpressionFrom(expression), operator);
         }
     }
 
-    public addExpressionTo(functionName : string, expression : Expression | NodeFunctionIdentifier, operator : FunctionOperator) {
-        if (expression instanceof NodeFunctionIdentifier) {
-            const linkedNodeFunction = expression.node.getFunction(expression.functionName);
-            if (linkedNodeFunction) {
-                const nodeFunction = this.functions.get(functionName);
+    // @ts-ignore
+    private getExpressionFrom(expression : Expression | NodeFunctionIdentifier | string | CategoryColumnIdentifier | HeaderIdentifier) {
+        if (isExpression(expression)) {
+            return expression;
+        }
 
-                if (nodeFunction) {
-                    nodeFunction.addExpression(linkedNodeFunction, operator);
-                }
-            }
+        if (expression instanceof NodeFunctionIdentifier) {
+            const nodeFunction = new FunctionNodeName(expression.node, expression.functionName);
+            return nodeFunction;
+        } else if (expression instanceof CategoryColumnIdentifier) {
+            return new FunctionCategoryColumn(expression.category, expression.columnName);
+        } else if (expression instanceof HeaderIdentifier) {
+            const nodeFunction = new FunctionHeaderColumn(expression.headerName);
+            return nodeFunction;
         } else {
-            const nodeFunction = this.functions.get(functionName);
-    
-            if (nodeFunction) {
-                nodeFunction.addExpression(expression, operator);
-            }
+            const parser = new ExpressionParser();
+            // @ts-ignore
+            const parsed = parser.parse(expression);
+            return this.getExpressionFrom(parsed);
         }
     }
 

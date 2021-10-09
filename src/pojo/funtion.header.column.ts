@@ -1,27 +1,18 @@
 import { Expression } from "./expression";
 import { NodeUser } from "./node.user";
-import { Node } from './node';
 import { Currency } from './currency';
 import { NodeRequirement } from "./node.requirement";
 
-
 export class FunctionHeaderColumn implements Expression {
 
-    private node: Node;
     private headerName: string;
 
-    public constructor(node: Node, headerName: string) {
-        this.node = node;
+    public constructor(headerName: string) {
         this.headerName = headerName;
     }
 
     public get(nodeUser: NodeUser) {
-        const categories = nodeUser.getNode(this.node).getLinkedCategories();
-
-        let currency = new Currency(0);
-        for (let category of categories) {
-            currency = currency.add(nodeUser.rollup(category, this.headerName));
-        }
+        let currency = nodeUser.rollup(this.headerName);
         return currency.getAmount();
     }
 

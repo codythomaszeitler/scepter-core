@@ -10,3 +10,7 @@ export interface Expression {
     requirements : () => NodeRequirement;
     view: () => string;
 }
+
+export function isExpression(toCheck : Object) {
+    return (toCheck as Expression).get && (toCheck as Expression).requirements && (toCheck as Expression).view
+}
