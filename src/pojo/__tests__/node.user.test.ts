@@ -1,5 +1,5 @@
 import { NodeUser, OnNodeAddedEvent } from "../node.user";
-import { Node, OnFunctionAddedEvent } from '../node';
+import { FunctionChangedListener, Node, OnFunctionAddedEvent, OnFunctionChangedEvent } from '../node';
 import { FunctionConstant } from "../function.constant";
 import { FunctionOperator } from "../function.operator";
 import { Function } from "../function";
@@ -28,6 +28,40 @@ describe('Node User', () => {
         caughtEvent = new OnNodeAddedEvent(new Node('NOT-YET-EMITTED'));
         testObject.addNode(new Node('Another Node!'));
         expect(caughtEvent.node.equals(new Node('NOT-YET-EMITTED'))).toBeTruthy();
+    });
+
+    it('should emit an event when a new function expression is added', () => {
+        const testObject = new NodeUser();
+
+        let caughtEvent = new OnFunctionChangedEvent(new Node('NOT-YET-EMITTED'),
+            'NOT-YET-EMITTED', new Function(new FunctionConstant(0)), FunctionOperator.DIVISION);
+        const listener = {
+            onFunctionChanged(e: OnFunctionChangedEvent) {
+                caughtEvent = e;
+            }
+        }
+
+        const node = new Node('Test');
+        testObject.addNode(node);
+
+        const functionName = 'Test Function Name';
+
+        testObject.addOnFunctionChangedListener(node, functionName, listener);
+
+        testObject.initFunction(node, functionName, new FunctionConstant(8));
+        testObject.addExpressionTo(node, functionName, new FunctionConstant(16), FunctionOperator.ADDITION);
+
+        expect(caughtEvent.node.equals(new Node('Test'))).toBeTruthy();
+        expect(caughtEvent.functionName).toBe(functionName);
+        expect(caughtEvent.expression.view()).toBe('16');
+
+        caughtEvent = new OnFunctionChangedEvent(new Node('NOT-YET-EMITTED'),
+            'NOT-YET-EMITTED', new Function(new FunctionConstant(0)), FunctionOperator.DIVISION);
+
+        testObject.removeOnFunctionChangedListener(node, functionName, listener);
+
+        testObject.initFunction(node, 'Another Function', new FunctionConstant(8));
+        expect(caughtEvent.node.equals(new Node('NOT-YET-EMITTED')));
     });
 
     it('should emit an event when a new function is added', () => {

@@ -1,5 +1,5 @@
 import { SpectreUser } from "./spectre.user";
-import { FunctionAddedListener, Node, NodeFunctionIdentifier } from './node';
+import { FunctionAddedListener, FunctionChangedListener, Node, NodeFunctionIdentifier } from './node';
 import { Expression } from './expression';
 import { Category, CategoryColumnIdentifier, HeaderIdentifier } from "./category";
 import { FunctionOperator } from "./function.operator";
@@ -96,6 +96,16 @@ export class NodeUser extends SpectreUser {
     public removeOnFunctionAddedListener(node : Node, listener : FunctionAddedListener) {
         const found = this.getNode(node);
         found.removeOnFunctionAddedListener(listener);
+    }
+
+    public addOnFunctionChangedListener(node : Node, functionName : string, listener : FunctionChangedListener) {
+        const found = this.getNode(node);
+        found.addOnFunctionChangedListener(functionName, listener);
+    }
+
+    public removeOnFunctionChangedListener(node : Node, functionName : string, listener : FunctionChangedListener) {
+        const found = this.getNode(node);
+        found.removeOnFunctionChangedListener(functionName, listener);
     }
 }
 

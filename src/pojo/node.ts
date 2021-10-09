@@ -7,15 +7,19 @@ import { ExpressionParser } from "./function.parser";
 import { FunctionCategoryColumn } from './function.category.column';
 import { FunctionNodeName } from './function.node.name';
 import { FunctionHeaderColumn } from './function.header.column';
+import { isJsxFragment } from 'typescript';
+import { e } from 'mathjs';
 
 export class Node {
 
     private name: string;
     private linkedCategories: Array<Category>;
-    private linkedNodes : Array<Node>;
+    private linkedNodes: Array<Node>;
     private onFunctionAddedListeners: Array<FunctionAddedListener>;
 
-    private functions : Map<string, Function>;
+    private onFunctionChangedListeners: Map<string, Array<FunctionChangedListener>>;
+
+    private functions: Map<string, Function>;
 
     constructor(name: string) {
         this.name = name;
@@ -23,9 +27,10 @@ export class Node {
         this.linkedNodes = new Array<Node>();
         this.functions = new Map<string, Function>();
         this.onFunctionAddedListeners = new Array<FunctionAddedListener>();
+        this.onFunctionChangedListeners = new Map<string, Array<FunctionChangedListener>>();
     }
 
-    public getFunction(functionName : string) {
+    public getFunction(functionName: string) {
         if (!this.functions.has(functionName)) {
             const errorMessage = `Could not find function [${functionName}] on node [${this.name}]`
             throw new Error(errorMessage);
@@ -34,7 +39,7 @@ export class Node {
         return this.functions.get(functionName);
     }
 
-    public initFunction(functionName: string, expression : Expression | NodeFunctionIdentifier | string | CategoryColumnIdentifier | HeaderIdentifier ) {
+    public initFunction(functionName: string, expression: NodeExpression) {
         const nodeFunction = new Function(this.getExpressionFrom(expression));
         this.functions.set(functionName, nodeFunction);
 
@@ -44,15 +49,27 @@ export class Node {
         }
     }
 
-    public addExpressionTo(functionName : string, expression : Expression | NodeFunctionIdentifier | string | CategoryColumnIdentifier | HeaderIdentifier, operator : FunctionOperator) {
+    public addExpressionTo(functionName: string, expression: NodeExpression, operator: FunctionOperator) {
         const nodeFunction = this.functions.get(functionName);
         if (nodeFunction) {
-            nodeFunction.addExpression(this.getExpressionFrom(expression), operator);
+            const realizedExpression = this.getExpressionFrom(expression);
+            nodeFunction.addExpression(realizedExpression, operator);
+            this.notifyFunctionChangedListeners(functionName, realizedExpression, operator);
+        }
+    }
+
+    private notifyFunctionChangedListeners(functionName : string, expression : Expression, operator : FunctionOperator) {
+        const listeners = this.onFunctionChangedListeners.get(functionName);
+        if (listeners) {
+            for (let listener of listeners) {
+                const event = new OnFunctionChangedEvent(this, functionName, expression, operator);
+                listener.onFunctionChanged(event);
+            }
         }
     }
 
     // @ts-ignore
-    private getExpressionFrom(expression : Expression | NodeFunctionIdentifier | string | CategoryColumnIdentifier | HeaderIdentifier) {
+    private getExpressionFrom(expression: Expression | NodeFunctionIdentifier | string | CategoryColumnIdentifier | HeaderIdentifier) {
         if (isExpression(expression)) {
             return expression;
         }
@@ -74,7 +91,7 @@ export class Node {
     }
 
 
-    public runFunction(functionName: string, nodeUser : NodeUser) {
+    public runFunction(functionName: string, nodeUser: NodeUser) {
         const nodeFunction = this.functions.get(functionName);
         return nodeFunction?.get(nodeUser);
     }
@@ -91,7 +108,7 @@ export class Node {
         return node.name === this.name;
     }
 
-    public link(linked : Category | Node) {
+    public link(linked: Category | Node) {
         if (linked instanceof Category) {
             this.linkedCategories.push(linked.copy());
         } else {
@@ -112,7 +129,34 @@ export class Node {
             return value !== listener;
         });
     }
+
+    public addOnFunctionChangedListener(functionName : string, listener : FunctionChangedListener) {
+        if (!this.onFunctionChangedListeners.has(functionName)) {
+            this.onFunctionChangedListeners.set(functionName, new Array<FunctionChangedListener>());
+        }
+        this.onFunctionChangedListeners.get(functionName)!.push(listener);
+    }
+
+    public removeOnFunctionChangedListener(functionName : string, listener : FunctionChangedListener) {
+        if (this.onFunctionChangedListeners.has(functionName)) {
+            let listeners = this.onFunctionChangedListeners.get(functionName);
+
+            listeners = listeners?.filter((inner) => {
+                return listener !== inner;
+            });
+
+            if (listeners) {
+                this.onFunctionChangedListeners.set(functionName, listeners);
+            }
+        }
+    }
 }
+
+type NodeExpression = Expression |
+    NodeFunctionIdentifier | 
+    string | 
+    CategoryColumnIdentifier | 
+    HeaderIdentifier;
 
 export class OnFunctionAddedEvent {
 
@@ -133,16 +177,35 @@ export interface FunctionAddedListener {
 
 export class NodeFunctionIdentifier {
 
-    public node : Node;
-    public functionName : string;
+    public node: Node;
+    public functionName: string;
 
-    public constructor(node : Node, functionName : string) {
+    public constructor(node: Node, functionName: string) {
         this.node = node;
         this.functionName = functionName;
     }
 
-    public equals(toCompare : NodeFunctionIdentifier) {
+    public equals(toCompare: NodeFunctionIdentifier) {
         return this.node.equals(toCompare.node) &&
             this.functionName === toCompare.functionName;
+    }
+}
+
+export interface FunctionChangedListener {
+    onFunctionChanged: (event: OnFunctionChangedEvent) => void;
+}
+
+export class OnFunctionChangedEvent {
+    
+    public node : Node;
+    public functionName : string;
+    public expression : Expression;
+    public operator : FunctionOperator;
+
+    constructor(node: Node, functionName: string, expression: Expression, operator : FunctionOperator) {
+        this.node = node;
+        this.functionName = functionName;
+        this.expression = expression;
+        this.operator = operator;
     }
 }
