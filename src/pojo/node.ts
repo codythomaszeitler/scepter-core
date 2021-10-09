@@ -129,4 +129,8 @@ export class NodeFunctionIdentifier {
         this.functionName = functionName;
     }
 
+    public equals(toCompare : NodeFunctionIdentifier) {
+        return this.node.equals(toCompare.node) &&
+            this.functionName === toCompare.functionName;
+    }
 }

@@ -126,7 +126,6 @@ describe('Function', () => {
         expect(thirdNode.runFunction('Third Function', nodeUser)).toBe(24);
     });
 
-
     // it ('should throw an exception if the function requires something the node is not linked to', () => {
     //     const nodeUser = new NodeUser();
 
