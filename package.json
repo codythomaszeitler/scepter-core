@@ -1,6 +1,6 @@
 {
   "name": "scepter-core",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "main": "index.js",
   "repository": "https://github.com/codythomaszeitler/scepter-core.git",
   "author": "Cody T. Zeitler <codyzeitler12@gmail.com>",
