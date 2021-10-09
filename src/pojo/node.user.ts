@@ -1,6 +1,7 @@
 import { SpectreUser } from "./spectre.user";
-import { Node } from './node';
-import { Category } from "./category";
+import { Node, NodeFunctionIdentifier } from './node';
+import { Expression } from './expression';
+import { Category, CategoryColumnIdentifier, HeaderIdentifier } from "./category";
 
 export class NodeUser extends SpectreUser {
 
@@ -12,6 +13,23 @@ export class NodeUser extends SpectreUser {
         super();
         this.nodes = new Array<Node>();
         this.onNodeAddedListeners = new Array<NodeAddedListener>();
+    }
+
+    public initFunction(node: Node, functionName: string, expression: Expression | NodeFunctionIdentifier | string | CategoryColumnIdentifier | HeaderIdentifier) {
+        const found = this.getNode(node);
+        found.initFunction(functionName, expression);
+    }
+
+    public runFunction(node : Node, functionName : string) {
+        const found = this.getNode(node);
+
+        const nodeFunction = found.getFunction(functionName);
+        if (!nodeFunction) {
+            const errorMessage = `Could not find function [${functionName}] on node [${node.getName()}]`
+            throw new Error(errorMessage);
+        }
+
+        return nodeFunction.get(this);
     }
 
     public getNode(toFind: Node) {

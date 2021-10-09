@@ -27,7 +27,8 @@ export class Node {
 
     public getFunction(functionName : string) {
         if (!this.functions.has(functionName)) {
-            throw new Error('Could not find function ' + functionName + ' from node ' + this.name);
+            const errorMessage = `Could not find function [${functionName}] on node [${this.name}]`
+            throw new Error(errorMessage);
         }
 
         return this.functions.get(functionName);
@@ -66,6 +67,7 @@ export class Node {
             return this.getExpressionFrom(parsed);
         }
     }
+
 
     public runFunction(functionName: string, nodeUser : NodeUser) {
         const nodeFunction = this.functions.get(functionName);

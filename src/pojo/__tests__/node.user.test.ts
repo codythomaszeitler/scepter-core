@@ -40,7 +40,7 @@ describe('Node User', () => {
     //         }
     //     }
 
-        
+
     //     const node = new Node('Test');
     //     testObject.addNode(node);
 
@@ -84,4 +84,32 @@ describe('Node User', () => {
 
     //     expect(node.runFunction(functionName)).toBe(16);
     // });
+
+    it('should be able to run a function found within a node with stuff found from node.user', () => {
+
+        const testObject = new NodeUser();
+
+        const node = new Node('Test Node');
+        testObject.addNode(node);
+
+        const functionName = 'Test Function Name';
+        testObject.initFunction(node, functionName, '8');
+        expect(testObject.runFunction(node, functionName)).toBe(8);
+    });
+
+    it('should throw an exception if you try to run a function that does not exist on a found node', () => {
+        const testObject = new NodeUser();
+
+        const node = new Node('Test Node');
+        testObject.addNode(node);
+
+        const functionName = 'Test Function Name';
+        let caughtException = new Error();
+        try {
+            testObject.runFunction(node, functionName);
+        } catch (e) {
+            caughtException = (e as Error);
+        }
+        expect(caughtException.message).toBe('Could not find function Test Function Name on node Test Node')
+    });
 });
