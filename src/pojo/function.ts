@@ -56,7 +56,7 @@ export class Function implements Expression {
     }
 }
 
-type FunctionPart = Expression | FunctionOperator;
+export type FunctionPart = Expression | FunctionOperator;
 
 
 class ExpressionWithOperator {
